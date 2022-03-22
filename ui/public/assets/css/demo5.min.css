@@ -6,7 +6,7 @@
 4. plugins
 5. base
 6. components
-7. header
+7. top-bar
 8. footer
 9. demo
 */
@@ -11732,7 +11732,7 @@ body .product-popup {
     font-size: 2rem;
   }
 }
-/* 7. header */
+/* 7. top-bar */
 /*--------------------------------
     Header
         -Header

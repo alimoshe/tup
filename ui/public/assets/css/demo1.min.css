@@ -5,7 +5,7 @@
 3. plugins
 4. base
 5. components
-6. header
+6. top-bar
 7. footer
 8. demo
 */
@@ -11790,13 +11790,13 @@ aside .sp-sidebar-banner span {
 @import '../../components/alerts';
 @import '../../components/breadcrumb';
 @import '../../components/instagram';
-@import '../../components/page-header';
+@import '../../components/page-top-bar';
 @import '../../components/pagination';
 @import '../../components/sidebar';
 @import '../../components/sidebar-shop';
 @import '../../components/testimonials';
 */
-/* 7. header */
+/* 7. top-bar */
 /*--------------------------------
     Header
         -Header
