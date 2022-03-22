@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Tup Click Backend API",
+  "main": "server.js",
+  "scripts": {
+    "watch": "nodemon server.js",
+    "start": "npm run watch",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Alireza Salehi",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "helmet": "^5.0.2",
+    "jest": "^27.5.1",
+    "mongoose": "^6.2.6"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
+  }
+}
