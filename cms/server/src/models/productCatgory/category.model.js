@@ -6,11 +6,10 @@ async function getAllCategories(){
 }
 
 async function createCategory(category){
-    categoryModel.create(category).then((res)=> {
-        return {ok : true};
-    })
+    return categoryModel.create(category);
 }
 
 module.exports = {
     getAllCategories,
+    createCategory,
 }

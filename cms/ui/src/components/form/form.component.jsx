@@ -1,9 +1,22 @@
 import React, {Component} from "react";
-
+const API_URL = "http://localhost:3080/category/";
 class FormComponent extends Component {
+
+
     constructor(props) {
         super(props);
+        this.state = {
+            categories : []
+        }
     }
+
+
+    componentDidMount() {
+        fetch(API_URL)
+            .then((data) => data.json())
+            .then(data => {this.setState({categories : data})});
+    }
+
     render() {
         return(
             <React.Fragment>
