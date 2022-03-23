@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import FileUploadComponent from "../file-upload/fileUpload";
 
 
-const API_URL = "http://localhost:3080/category/";
+const API_BASE_URL = "http://localhost:3080/";
 
 class FormComponent extends Component {
 
@@ -16,7 +16,7 @@ class FormComponent extends Component {
 
 
     componentDidMount() {
-        fetch(API_URL)
+        fetch(`${API_BASE_URL}/category/')
             .then((data) => data.json())
             .then(data => {this.setState({categories : data})});
     }
