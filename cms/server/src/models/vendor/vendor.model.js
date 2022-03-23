@@ -10,4 +10,5 @@ async function createVendor(vendor){
 
 module.exports = {
     getAllVendors,
+    createVendor
 }

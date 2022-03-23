@@ -1,5 +1,8 @@
 const express = require('express');
+
 const categoryRouter = require('./routes/category.route');
+const vendorRouter = require('./routes/vendor.route')
+
 const databaseConnection = require('./services/mongo.service');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -16,6 +19,7 @@ cms_app.use(express.json());
 cms_app.use(morgan('combined'));
 // --------------------------------------- Register all routes exist in API
 cms_app.use('/category', categoryRouter );
+cms_app.use('/vendor', vendorRouter);
 
 cms_app.get('/',(req, res)=>{
     res.status(200).send({
