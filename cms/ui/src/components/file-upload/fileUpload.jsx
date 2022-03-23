@@ -18,11 +18,13 @@ class FileUploadComponent extends Component {
             clonedFiles.push(e.target.value);
             clonedPhysicalFiles.push(e.target.files[0]);
 
+            this.props.onAddImage(e.target.value);
+
             this.setState({selectedFiles : clonedFiles});
             this.setState({physicalFiles : clonedPhysicalFiles});
 
         }
-        console.log(this.state.selectedFiles);
+
     }
     getDisplayStyle = () => {
         return this.state.selectedFiles.length > 0 ? '' : 'none';

@@ -1,5 +1,4 @@
 const express = require('express');
-
 const categoryRouter = require('./routes/category.route');
 const vendorRouter = require('./routes/vendor.route')
 

@@ -2,23 +2,49 @@ import React, {Component} from "react";
 import FileUploadComponent from "../file-upload/fileUpload";
 
 
-const API_BASE_URL = "http://localhost:3080/";
+const API_BASE_URL = "http://localhost:3080";
 
 class FormComponent extends Component {
-
-
+   product = {
+        productId : -1,
+        title:'',
+        categoryId:1,
+        vendorId:1,
+        rate:0,
+        mainPrice:0,
+        discountPrice: 0,
+        pictures:[],
+        description : ''
+    }
     constructor(props) {
         super(props);
         this.state = {
-            categories : []
+            categories : [],
+            images : []
         }
     }
 
+    handleAddImage = (image) => {
+       console.log(image);
+    }
 
     componentDidMount() {
-        fetch(`${API_BASE_URL}/category/')
+        fetch(`${API_BASE_URL}/category/`)
             .then((data) => data.json())
             .then(data => {this.setState({categories : data})});
+    }
+
+    handleFormSubmit = (e) => {
+       e.preventDefault();
+       this.product.categoryId = this.refs['cmbCategory'].value;
+       this.product.rate = 0;
+       this.product.description = this.refs['txtDescription'].value;
+       this.product.title = this.refs['txtProdName'].value;
+       this.product.discountPrice = 0;
+       this.product.mainPrice = Number(this.refs['txtPrice'].value);
+       this.product.vendorId = 1;
+
+       console.log(this.product);
     }
 
     render() {
@@ -69,6 +95,7 @@ class FormComponent extends Component {
                                         <input type="text"
                                                className="form-control"
                                                required
+                                               ref="txtProdName"
                                                name="txtProdName"
                                                id="txtProdName"
                                                placeholder="چیزی را تایپ کنید"/>
@@ -77,7 +104,7 @@ class FormComponent extends Component {
                                     <div className="form-group">
                                         <label>گروه کالا</label>
                                         <div className="form-group m-t-10">
-                                            <select className="form-control">
+                                            <select className="form-control" ref="cmbCategory">
                                                 {
                                                     this.state.categories.map(data => (
                                                         <option key={data.categoryId} value={data.categoryId}>{data.title}</option>
@@ -91,8 +118,12 @@ class FormComponent extends Component {
                                     <div className="form-group">
                                         <label>قیمت</label>
                                         <div>
-                                            <input data-parsley-type="number" type="text"
-                                                   className="form-control" required minLength="2"
+                                            <input data-parsley-type="number"
+                                                   type="text"
+                                                   className="form-control"
+                                                   required
+                                                   ref="txtPrice"
+                                                   minLength="2"
                                                    maxLength="9"
                                                    placeholder="فقط قیمت را وارد کنید"/>
                                         </div>
@@ -101,7 +132,7 @@ class FormComponent extends Component {
                                         <label>عکس های کالا</label>
                                         <div>
                                             <div className="col-lg-6">
-                                                <FileUploadComponent />
+                                                <FileUploadComponent onAddImage={this.handleAddImage} />
                                             </div>
                                         </div>
 
@@ -109,12 +140,12 @@ class FormComponent extends Component {
                                     <div className="form-group">
                                         <label>توضیحات مربوط به کالا</label>
                                         <div>
-                                            <textarea required className="form-control" rows="5"/>
+                                            <textarea required ref="txtDescription" className="form-control" rows="5"/>
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         <div>
-                                            <button type="submit" className="btn btn-primary waves-effect waves-light">
+                                            <button type="submit" onClick={this.handleFormSubmit} className="btn btn-primary waves-effect waves-light">
                                                 ارسال
                                             </button>
                                             <button type="reset" className="btn btn-secondary waves-effect m-l-5">
