@@ -1,18 +1,26 @@
 import React, {Component} from 'react';
 
 class FileUploadComponent extends Component {
+    product = {};
     constructor(props) {
         super(props);
         this.state ={
-            selectedFiles : []
+            selectedFiles : [],
+            physicalFiles : []
         }
     }
+
     handleUploadChange = (e) => {
         const clonedFiles = [...this.state.selectedFiles];
+        const clonedPhysicalFiles = [...this.state.physicalFiles];
         if (!clonedFiles.includes(e.target.value, 0)) {
 
             clonedFiles.push(e.target.value);
-            this.setState({selectedFiles: clonedFiles});
+            clonedPhysicalFiles.push(e.target.files[0]);
+
+            this.setState({selectedFiles : clonedFiles});
+            this.setState({physicalFiles : clonedPhysicalFiles});
+
         }
         console.log(this.state.selectedFiles);
     }
@@ -56,6 +64,16 @@ class FileUploadComponent extends Component {
                     }
                     </tbody>
                 </table>
+                {
+                    this.state.physicalFiles.map(file => (
+
+                         <img className="mt-5" src={URL.createObjectURL(file)} alt="picture" style={{
+                             border:'1px',
+                             width:'128px',
+                             height:'128px'
+                         }}/>
+                    ))
+                }
             </>
         )
     }

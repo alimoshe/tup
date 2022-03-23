@@ -14,7 +14,7 @@ class MainPageComponent extends Component {
                         <div className="page-content-wrapper ">
                             <div className="container-fluid">
                                 <FormComponent
-                                    formHeader="اعتبار سنجی فرم"
+                                    formHeader="معرفی گالا"
                                     formType="معرفی کالا"
                                     formDescription= "لطفا با رعایت کامل کالای مدنظر را معرفی نماپید"
                                 />
