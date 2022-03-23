@@ -1,5 +1,9 @@
 import React, {Component} from "react";
+import FileUploadComponent from "../file-upload/fileUpload";
+
+
 const API_URL = "http://localhost:3080/category/";
+
 class FormComponent extends Component {
 
 
@@ -74,55 +78,38 @@ class FormComponent extends Component {
                                         <label>گروه کالا</label>
                                         <div className="form-group m-t-10">
                                             <select className="form-control">
-                                                <option>انتخاب</option>
-                                                <option>انتخاب بزرگ</option>
-                                                <option>انتخاب کوچک</option>
+                                                {
+                                                    this.state.categories.map(data => (
+                                                        <option key={data.categoryId} value={data.categoryId}>{data.title}</option>
+                                                    ))
+                                                }
+
                                             </select>
                                         </div>
                                     </div>
 
                                     <div className="form-group">
-                                        <label>ایمیل</label>
-                                        <div>
-                                            <input type="email" className="form-control" required
-                                                   parsley-type="email" placeholder="وارد کردن ایمیل"/>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>آدرس</label>
-                                        <div>
-                                            <input parsley-type="url" type="url" className="form-control"
-                                                   required placeholder="آدرس"/>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>رقم</label>
-                                        <div>
-                                            <input data-parsley-type="digits" type="text"
-                                                   className="form-control" required
-                                                   placeholder="فقط رقم ها را وارد کنید"/>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>شماره</label>
+                                        <label>قیمت</label>
                                         <div>
                                             <input data-parsley-type="number" type="text"
-                                                   className="form-control" required
-                                                   placeholder="فقط شماره را وارد کنید"/>
+                                                   className="form-control" required minLength="2"
+                                                   maxLength="9"
+                                                   placeholder="فقط قیمت را وارد کنید"/>
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label>الفبایی عددی</label>
+                                        <label>عکس های کالا</label>
                                         <div>
-                                            <input data-parsley-type="alphanum" type="text"
-                                                   className="form-control" required
-                                                   placeholder="مقدار الفبایی را وارد کنید"/>
+                                            <div className="col-lg-6">
+                                                <FileUploadComponent />
+                                            </div>
                                         </div>
+
                                     </div>
                                     <div className="form-group">
-                                        <label>منطقه متن</label>
+                                        <label>توضیحات مربوط به کالا</label>
                                         <div>
-                                            <textarea required className="form-control" rows="5"></textarea>
+                                            <textarea required className="form-control" rows="5"/>
                                         </div>
                                     </div>
                                     <div className="form-group">
