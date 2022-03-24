@@ -1,4 +1,6 @@
 const express = require('express');
+
+const commonRouter = require('./routes/common.route');
 const categoryRouter = require('./routes/category.route');
 const vendorRouter = require('./routes/vendor.route')
 
@@ -17,6 +19,7 @@ cms_app.use(express.json());
 // --------------------------------------- Use Morgan Package for log all http event
 cms_app.use(morgan('combined'));
 // --------------------------------------- Register all routes exist in API
+cms_app.use('/common', commonRouter);
 cms_app.use('/category', categoryRouter );
 cms_app.use('/vendor', vendorRouter);
 

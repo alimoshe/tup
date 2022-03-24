@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 
+
 class FileUploadComponent extends Component {
     product = {};
     constructor(props) {
         super(props);
-        this.state ={
-            selectedFiles : [],
-            physicalFiles : []
+        this.state = {
+            selectedFiles: [],
+            physicalFiles: []
+
         }
     }
 
@@ -18,7 +20,7 @@ class FileUploadComponent extends Component {
             clonedFiles.push(e.target.value);
             clonedPhysicalFiles.push(e.target.files[0]);
 
-            this.props.onAddImage(e.target.value);
+            this.props.onAddImage(e.target.files[0]);
 
             this.setState({selectedFiles : clonedFiles});
             this.setState({physicalFiles : clonedPhysicalFiles});

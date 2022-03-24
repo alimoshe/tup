@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import FileUploadComponent from "../file-upload/fileUpload";
-
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:3080";
 
@@ -24,8 +24,19 @@ class FormComponent extends Component {
         }
     }
 
-    handleAddImage = (image) => {
-       console.log(image);
+    handleAddImage =  (image) => {
+        const clonedImages = [...this.state.images];
+        const frmData = new FormData();
+        frmData.append('file', image);
+        const requestOptions = {
+            method: 'POST',
+            body: frmData
+        };
+        axios.post(`${API_BASE_URL}/common/upload`,frmData).then(res =>{
+            console.log(res.statusText);
+        })
+
+        this.setState({images : clonedImages});
     }
 
     componentDidMount() {
