@@ -30,7 +30,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-briefcase"></i> <span> المنت ها </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -55,7 +55,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-archive"></i> <span> UI پیشرفته </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -69,7 +69,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-rocket"></i> <span> آیکن ها </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -88,7 +88,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-document"></i><span> فرم ها </span> <span
                                     className="badge badge-warning badge-pill float-right">8</span></a>
                                 <ul className="list-unstyled">
@@ -104,7 +104,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-graph-bar"></i><span> نمودار </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -118,7 +118,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-view-thumb"></i><span> جداول ها </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -132,7 +132,7 @@ class LeftSideMenuComponent extends Component{
                             <li className="menu-title">خارجی</li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-location"></i><span> نقشه ها </span> <span
                                     className="badge badge-danger badge-pill float-right">2</span></a>
                                 <ul className="list-unstyled">
@@ -142,7 +142,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-copy"></i><span> صفحات </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">
@@ -157,7 +157,7 @@ class LeftSideMenuComponent extends Component{
                             </li>
 
                             <li className="has_sub">
-                                <a href="javascript:void(0);" className="waves-effect"><i
+                                <a href="#" className="waves-effect"><i
                                     className="dripicons-medical"></i><span> صفحات اضافی </span> <span
                                     className="menu-arrow float-right"><i className="mdi mdi-chevron-right"></i></span></a>
                                 <ul className="list-unstyled">

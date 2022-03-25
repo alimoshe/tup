@@ -20,7 +20,7 @@ class TopBarComponent extends Component {
                         <div className="search-bar">
                             <input className="search-input" type="search" placeholder="جستجو"/>
                             <a href="#" className="close-search toggle-search" data-target="#search-wrap">
-                                <i className="mdi mdi-close-circle"></i>
+                                <i className="mdi mdi-close-circle"/>
                             </a>
                         </div>
                     </div>
@@ -28,7 +28,7 @@ class TopBarComponent extends Component {
                     <ul className="list-inline float-right mb-0">
                         <li className="list-inline-item dropdown notification-list">
                             <a className="nav-link waves-effect toggle-search" href="#" data-target="#search-wrap">
-                                <i className="mdi mdi-magnify noti-icon"></i>
+                                <i className="mdi mdi-magnify noti-icon"/>
                             </a>
                         </li>
 
@@ -36,7 +36,7 @@ class TopBarComponent extends Component {
                             <a className="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown"
                                href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
-                                <i className="mdi mdi-bell-outline noti-icon"></i>
+                                <i className="mdi mdi-bell-outline noti-icon"/>
                                 <span className="badge badge-danger badge-pill noti-icon-badge">3</span>
                             </a>
                             <div
@@ -48,7 +48,7 @@ class TopBarComponent extends Component {
 
                                 <div className="slimscroll-noti">
 
-                                    <a href="javascript:void(0);" className="dropdown-item notify-item active">
+                                    <a href="#" className="dropdown-item notify-item active">
                                         <div className="notify-icon bg-success"><i className="mdi mdi-cart-outline"></i>
                                         </div>
                                         <p className="notify-details"><b>سفارش شما قرار داده شده است</b><span
@@ -57,16 +57,16 @@ class TopBarComponent extends Component {
                                     </a>
 
 
-                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <a href="#" className="dropdown-item notify-item">
                                         <div className="notify-icon bg-danger"><i
-                                            className="mdi mdi-message-text-outline"></i></div>
+                                            className="mdi mdi-message-text-outline"/></div>
                                         <p className="notify-details"><b>پیام جدید دریافت شد</b><span
                                             className="text-muted">شما 87 پیام خوانده نشده دارید</span></p>
                                     </a>
 
 
-                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
-                                        <div className="notify-icon bg-info"><i className="mdi mdi-filter-outline"></i>
+                                    <a href="#" className="dropdown-item notify-item">
+                                        <div className="notify-icon bg-info"><i className="mdi mdi-filter-outline"/>
                                         </div>
                                         <p className="notify-details"><b>مورد شما حمل می شود</b><span
                                             className="text-muted">این یک واقعیت طولانی است که خواننده خواهد بود</span>
@@ -74,16 +74,16 @@ class TopBarComponent extends Component {
                                     </a>
 
 
-                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <a href="#" className="dropdown-item notify-item">
                                         <div className="notify-icon bg-success"><i
-                                            className="mdi mdi-message-text-outline"></i></div>
+                                            className="mdi mdi-message-text-outline"/></div>
                                         <p className="notify-details"><b>پیام جدید دریافت شد</b><span
                                             className="text-muted">شما 87 پیام خوانده نشده دارید</span></p>
                                     </a>
 
 
-                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
-                                        <div className="notify-icon bg-warning"><i className="mdi mdi-cart-outline"></i>
+                                    <a href="#" className="dropdown-item notify-item">
+                                        <div className="notify-icon bg-warning"><i className="mdi mdi-cart-outline"/>
                                         </div>
                                         <p className="notify-details"><b>سفارش شما قرار داده شده است</b><span
                                             className="text-muted">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</span>
@@ -94,7 +94,7 @@ class TopBarComponent extends Component {
 
 
 
-                                <a href="javascript:void(0);" className="dropdown-item notify-all">
+                                <a href="#" className="dropdown-item notify-all">
                                     مشاهده همه
                                 </a>
 
@@ -114,16 +114,16 @@ class TopBarComponent extends Component {
                             </a>
                             <div className="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown">
                                 <a className="dropdown-item" href="#"><i
-                                    className="dripicons-user text-muted"></i> پروفایل</a>
+                                    className="dripicons-user text-muted"/> پروفایل</a>
                                 <a className="dropdown-item" href="#"><i
-                                    className="dripicons-wallet text-muted"></i> کیف پول من</a>
+                                    className="dripicons-wallet text-muted"/> کیف پول من</a>
                                 <a className="dropdown-item" href="#"><span
                                     className="badge badge-success float-right m-t-5">5</span><i
-                                    className="dripicons-gear text-muted"></i> تنظیمات</a>
-                                <a className="dropdown-item" href="#"><i className="dripicons-lock text-muted"></i> قفل
+                                    className="dripicons-gear text-muted"/> تنظیمات</a>
+                                <a className="dropdown-item" href="#"><i className="dripicons-lock text-muted"/> قفل
                                     صفحه</a>
-                                <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="#"><i className="dripicons-exit text-muted"></i> خروج</a>
+                                <div className="dropdown-divider"> </div>
+                                <a className="dropdown-item" href="#"><i className="dripicons-exit text-muted"/> خروج</a>
                             </div>
                         </li>
 
@@ -132,20 +132,20 @@ class TopBarComponent extends Component {
                     <ul className="list-inline menu-left mb-0">
                         <li className="list-inline-item">
                             <button type="button" className="button-menu-mobile open-left waves-effect">
-                                <i className="mdi mdi-menu"></i>
+                                <i className="mdi mdi-menu"/>
                             </button>
                         </li>
                         <li className="list-inline-item dropdown notification-list d-none d-sm-inline-block">
                             <a className="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown"
                                href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
-                                ایجاد جدید ترین <i className="mdi mdi-plus"></i>
+                                ایجاد جدید ترین <i className="mdi mdi-plus"/>
                             </a>
                             <div className="dropdown-menu dropdown-menu-animated">
                                 <a className="dropdown-item" href="#">عملیات</a>
                                 <a className="dropdown-item" href="#">اقدام دیگری</a>
                                 <a className="dropdown-item" href="#">چیز های دیگر</a>
-                                <div className="dropdown-divider"></div>
+                                <div className="dropdown-divider"> </div>
                                 <a className="dropdown-item" href="#">پیوند جدا شده</a>
                             </div>
                         </li>

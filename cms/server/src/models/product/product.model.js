@@ -12,10 +12,11 @@ const productModel = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    vendorId:{
-        type:Number,
+    categoryTitle:{
+        type:String,
         required:true,
     },
+    vendors :[Object],
     rate:{
         type:Number
     },
@@ -25,6 +26,15 @@ const productModel = new mongoose.Schema({
     },
     discountPrice:{
         type:Number
+    },
+    expireDate:{
+        type:Date,
+        required:false
+    },
+    isVisible:{
+        type:Boolean,
+        required:false,
+        default:true,
     },
     pictures:[String],
     description:{

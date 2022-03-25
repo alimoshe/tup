@@ -1,27 +1,30 @@
 const express = require('express');
 const multer = require('multer');
 const commonRouter = express.Router();
-
+var imgName = '';
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images')
+    destination:  (req, file, cb) => {
+        cb(null, 'public/images');
     },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' +file.originalname )
+    filename:  (req, file, cb) => {
+        if(file) {
+            const name = Date.now() + '-' + file.originalname;
+            imgName = name;
+            cb(null, name);
+        }
     }
 })
 const upload = multer({ storage: storage }).single('file')
 commonRouter.post('/upload',(req, res) => {
-
-    upload(req, res, function (err) {
+    upload(req, res, (err) => {
         if (err instanceof multer.MulterError) {
-            return res.status(500).json(err)
+            return res.status(500).json(err);
         } else if (err) {
-            return res.status(500).json(err)
+            return res.status(500).json(err);
+        }else{
+            return res.status(200).json({ok:true, imageName:imgName});
         }
-        return res.status(200).send(req.file)
-
-    })
+    });
 
 });
 
