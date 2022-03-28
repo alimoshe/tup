@@ -29,7 +29,10 @@ class FileUploadComponent extends Component {
 
     }
     getDisplayStyle = () => {
-        return this.state.selectedFiles.length > 0 ? '' : 'none';
+        return this.state.selectedFiles.length > 0 && this.props.toBeRender ? '' : 'none';
+    }
+    getRenderStatus = () => {
+        return this.props.toBeRender === true ? '' : 'none';
     }
 
     removeFile = (e) => {
@@ -41,11 +44,11 @@ class FileUploadComponent extends Component {
     render() {
 
         return (
-            <>
+            < React.Fragment >
                 <input className="input-group"
                        accept=".gif,.jpg,.jpeg,.png"
                        type="file"
-                       onInput={this.handleUploadChange}/>
+                       onInput={this.handleUploadChange} style={{display:this.getRenderStatus()}}/>
                 <table className="table table-dark mb-0 mt-3"
                        style={{display: this.getDisplayStyle()}}>
                     <thead>
@@ -78,7 +81,7 @@ class FileUploadComponent extends Component {
                          }}/>
                     ))
                 }
-            </>
+            </ React.Fragment >
         )
     }
 }
