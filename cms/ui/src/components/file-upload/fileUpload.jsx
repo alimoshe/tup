@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import axios from "axios";
 
+const API_BASE_URL = "http://localhost:3080";
 
 class FileUploadComponent extends Component {
     product = {};
@@ -7,10 +9,14 @@ class FileUploadComponent extends Component {
         super(props);
         this.state = {
             selectedFiles: [],
-            physicalFiles: []
+            images:[],
+            physicalFiles: [],
+            imageNames:[]
 
         }
     }
+
+
 
     handleUploadChange = (e) => {
         const clonedFiles = [...this.state.selectedFiles];
@@ -20,10 +26,11 @@ class FileUploadComponent extends Component {
             clonedFiles.push(e.target.value);
             clonedPhysicalFiles.push(e.target.files[0]);
 
-            this.props.onAddImage(e.target.files[0]);
+            this.handleAddImage(e.target.value);
 
             this.setState({selectedFiles : clonedFiles});
             this.setState({physicalFiles : clonedPhysicalFiles});
+
 
         }
 
@@ -40,6 +47,17 @@ class FileUploadComponent extends Component {
         this.setState({selectedFiles : this.state.selectedFiles.filter((data) => {
             return data !== e.target.title;
             })})
+    }
+    postImageToApi = () => {
+        this.props.onPostToApi(this.state.physicalFiles);
+
+    }
+
+    handleAddImage = (image) => {
+        const clonedImages = [...this.state.images];
+        clonedImages.push(image);
+        this.setState({images: clonedImages});
+
     }
     render() {
 
@@ -60,7 +78,7 @@ class FileUploadComponent extends Component {
                     <tbody>
                     {
                         this.state.selectedFiles.map(data => (
-                            <tr>
+                            <tr >
                                 <td>{data}</td>
                                 <td><a href=""
                                        onClick={this.removeFile}
@@ -81,6 +99,19 @@ class FileUploadComponent extends Component {
                          }}/>
                     ))
                 }
+                <div className="modal-footer">
+                    <div>
+                        <button type="submit" onClick={this.postImageToApi}
+                                className="btn btn-success waves-effect waves-light">
+                            تایید
+                        </button>
+                        <button data-dismiss="modal"
+                                onClick={this.props.onHide}
+                                className="btn btn-danger waves-effect ml-2">
+                            لغو
+                        </button>
+                    </div>
+                </div>
             </ React.Fragment >
         )
     }

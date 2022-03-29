@@ -10,10 +10,17 @@ class ProductListComponent extends Component{
 
     }
     handleSelectRow = (e) => {
-        if(e.target.checked) {
-            const dataTag = Number(e.target.attributes['data-tag']);
-            this.setState({selectedProduct : dataTag})
+        if (e.target.checked) {
+            const dataTag = Number(e.target.attributes['data-tag'].value);
+            this.setState({selectedProduct: dataTag})
+            this.props.onSelectItem(dataTag);
+        }else{
+            const dataTag = -1;
+            this.setState({selectedProduct: dataTag})
+            this.props.onSelectItem(dataTag);
         }
+
+
     }
     render() {
         return (

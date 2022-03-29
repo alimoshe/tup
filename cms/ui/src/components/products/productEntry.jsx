@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import FileUploadComponent from "../file-upload/fileUpload";
 import axios from "axios";
+import FailureAlertComponent from "../alert/failureAlert";
 
 const API_BASE_URL="http://localhost:3080";
 
@@ -27,27 +28,28 @@ class ProductEntryComponent extends Component {
 
         this.state = {
             showError: false,
-            errorMessage : '',
-            categories : [],
+            errorMessage: '',
+            categories: [],
+            images: [],
+            imageNames: []
         }
     }
 
     validation = () => {
 
-        if(!this.productName.current.value || !this.category.current.value  ||
-           !this.mainPrice.current.value || !this.description.current.value){
-            this.setState({showError : true, errorMessage : 'اطلاعات جهت ثبت کامل نیست'});
-            
+        if (!this.productName.current.value || !this.category.current.value ||
+            !this.mainPrice.current.value || !this.description.current.value) {
+            this.setState({showError: true, errorMessage: 'اطلاعات جهت ثبت کامل نیست'});
             return false;
-        }else{
-            this.setState({showError:false});
+        } else {
+            this.setState({showError: false});
             return true;
         }
     }
 
     handleFormSubmit = (e) => {
         e.preventDefault();
-        if(!this.validation())
+        if (!this.validation())
             return;
         // clear Previous Vendors exist in array
         product.vendors.splice(0, product.length);
@@ -65,17 +67,17 @@ class ProductEntryComponent extends Component {
 
         axios.post(`${API_BASE_URL}/product`, product).then(res => {
             if (res.statusText.toLowerCase() !== 'ok') {
-                this.setState({showError: true, errorMessage : 'در ثبت اطلاعات خطایی رخ داده است'})
+                this.setState({showError: true, errorMessage: 'در ثبت اطلاعات خطایی رخ داده است'})
                 console.log(res);
             }else {
-                this.props.onCreateNewProduct();
+                this.props.onSubmit();
+                this.props.onHide();
             }
         });
     }
 
-    showAllError = () => {
-        return this.state.showError === false ? 'none' : '';
-    }
+
+
 
     componentDidMount() {
         fetch(`${API_BASE_URL}/category/`, {mode: 'cors'})
@@ -85,13 +87,18 @@ class ProductEntryComponent extends Component {
             });
     }
 
+
+
+
+
+    getDisplayStyle = () => {
+        return this.state.showError === true ? '' : 'none';
+    }
     render() {
         return (
             <React.Fragment>
-                <div className="alert alert-danger mb-2" style={{display:this.showAllError()}} role="alert">
-                    {this.state.errorMessage}
-                </div>
-                <form className="" action="#">
+                <FailureAlertComponent message={this.state.errorMessage} isShow={this.getDisplayStyle()} />
+                <form className={""} action="#">
                     <div className="form-group">
                         <label>عنوان کالا</label>
                         <input type="text"
@@ -131,36 +138,26 @@ class ProductEntryComponent extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-
-                        <div>
-                            <label>عکس های کالا</label>
-                            <div className="col-lg-6">
-                                <FileUploadComponent toBeRender={false}
-                                                     onAddImage={this.handleAddImage}/>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className="form-group">
                         <label>توضیحات مربوط به کالا</label>
                         <div>
-                                                <textarea required ref={this.description} className="form-control"
-                                                          rows="5"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div>
-                            <button type="submit" onClick={this.handleFormSubmit}
-                                    className="btn btn-primary waves-effect waves-light">
-                                ارسال
-                            </button>
-                            <button data-dismiss="modal"
-                                    className="btn btn-secondary waves-effect m-l-5">
-                                لغو
-                            </button>
+                            <textarea required ref={this.description} className="form-control"
+                                  rows="5"/>
                         </div>
                     </div>
                 </form>
+                <div className="modal-footer">
+                    <div>
+                        <button type="submit" onClick={this.handleFormSubmit}
+                                className="btn btn-success waves-effect waves-light">
+                            تایید
+                        </button>
+                        <button data-dismiss="modal"
+                                onClick={this.props.onHide}
+                                className="btn btn-danger waves-effect ml-2">
+                            لغو
+                        </button>
+                    </div>
+                </div>
             </React.Fragment>
         );
     }

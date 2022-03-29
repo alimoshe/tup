@@ -8,6 +8,13 @@ productRouter.get('/', async (req, res)=>{
     return res.status(200).send(_products);
 });
 
+productRouter.get('/:name', async (req, res)=>{
+    if(req.params.name) {
+        const _products = await productModel.getAllProduct();
+        return res.status(200).send(_products);
+    }
+});
+
 productRouter.get('/all', async (req, res)=>{
     const _products = await productModel.getProductsWithoutFilter();
     return res.status(200).send(_products);

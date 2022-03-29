@@ -13,7 +13,7 @@ async function createProduct(product){
 }
 
 async function expireProduct(productId) {
-    console.log(`Product ID : ${productId}`);
+    //console.log(`Product ID : ${productId}`);
     return productModel.updateOne({
         productId: productId
     }, {
@@ -22,7 +22,20 @@ async function expireProduct(productId) {
     });
 
 }
+
+async function updateProductImage(productId, images) {
+    //console.log(`Product ID : ${productId}`);
+    return productModel.updateOne({
+        productId: productId
+    }, {
+        pictures:images
+
+    });
+
+}
+
 async function getProductsByTitle(searchTitle){
+
     return productModel.find({
         title:`/${searchTitle}/`,
         isVisible:true
@@ -35,4 +48,6 @@ module.exports = {
     getProductsByTitle,
     expireProduct,
     getProductsWithoutFilter,
+    updateProductImage,
+
 }
