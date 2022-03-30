@@ -34,6 +34,54 @@ async function updateProductImage(productId, images) {
 
 }
 
+async function getAllProductPics(prodId){
+    return productModel.findOne({
+        productId : prodId
+    },{pictures:1, productId : 1});
+}
+
+async function clearProductPictures(prodId) {
+
+    return productModel.findOne({
+        productId: prodId,
+        isVisible:true
+    }).then(data => {
+        console.log(data.pictures);
+        productModel.updateMany({
+            productId: prodId,
+            isVisible:true
+
+        }, {
+            '$pullAll': {
+                'pictures': data.pictures
+            }
+        }).exec();
+    });
+
+
+}
+
+async function assignImage(img, prodId) {
+
+    console.log(img, prodId);
+    return productModel.findOne({
+        productId: prodId,
+        isVisible:true
+    }).then(data => {
+        productModel.updateMany({
+            productId: prodId,
+            isVisible:true
+
+        }, {
+            '$push': {
+                'pictures': [img]
+            }
+        }).exec();
+    });
+
+
+}
+
 async function getProductsByTitle(searchTitle){
 
     return productModel.find({
@@ -49,5 +97,7 @@ module.exports = {
     expireProduct,
     getProductsWithoutFilter,
     updateProductImage,
-
+    getAllProductPics,
+    clearProductPictures,
+    assignImage,
 }

@@ -24,7 +24,7 @@ class FormComponent extends Component {
             imageNames : [],
             showSuccessAlert:'none',
             showFailureAlert:'none',
-            selectedProductId : -1,
+            selectedImgProductId : -1,
             failureMessage:'',
             imageInEditMode: false,
         }
@@ -84,29 +84,66 @@ class FormComponent extends Component {
     handleSelectItem = (tag) => {
         console.log(tag);
         if(isNaN(tag) || !tag) {
-            this.setState({selectedProductId: -1});
+            this.setState({selectedImgProductId: -1});
         }else {
-            this.setState({selectedProductId: tag});
+            this.setState({selectedImgProductId: tag});
         }
     }
 
     sendImagesToApi = (images) => {
 
         const frmData = new FormData();
-       images.map((image) => {
+
+        images.map((image) => {
+
+            frmData.delete('file');
+            frmData.delete('productId');
+
             frmData.append('file', image);
+            frmData.append('productId', this.state.selectedImgProductId)
             const requestOptions = {
                 method: 'POST',
                 body: frmData
             };
+
             axios.post(`${API_BASE_URL}/common/upload`, frmData).then(res => {
                 const localImageNames = [...this.state.imageNames];
                 localImageNames.push(res.data.imageName);
-                return this.setState({imageNames: localImageNames});
+                this.assignImageToProduct(res.data.imageName);
+                this.setState({imageNames: localImageNames});
+
             })
-        })
+
+        });
+
 
     }
+
+    assignImageToProduct = (img) => {
+        axios.post(`${API_BASE_URL}/product/imgAssign`, {image: img, prodId: this.state.selectedImgProductId})
+            .then(res => {
+                console.log(res);
+            });
+    }
+
+    removeAllProductImage = () => {
+        if (this.state.selectedImgProductId !== -1) {
+            this.state.products.map((data) => {
+                if (data.productId === this.state.selectedImgProductId) {
+                    const requestOptions = {
+                        method: 'POST',
+                        body: data.productId
+                    };
+                    axios.post(`${API_BASE_URL}/common/picRemove`, requestOptions).then(res => {
+                        console.log(res);
+                    });
+
+                }
+            });
+        }
+    }
+
+
     handleAddImage = (image) => {
         const clonedImages = [...this.state.images];
         clonedImages.push(image);
@@ -115,7 +152,9 @@ class FormComponent extends Component {
     }
 
     selectProduct = (e) => {
-        if(this.state.selectedProductId === -1){
+        //this.removeAllProductImage();
+
+        if(this.state.selectedImgProductId === -1){
             e.target.attributes['data-target'].value = '.bs';
             this.setState({showFailureAlert : '', failureMessage:'لطفا ابتدا یک محصول را انتخاب نمایید'});
             this.setState({imageInEditMode : true});
@@ -123,6 +162,8 @@ class FormComponent extends Component {
             e.target.attributes['data-target'].value = '.bs-another-modal-center';
             this.setState({showFailureAlert : 'none', failureMessage:''});
         }
+
+
     }
 
     handleHideImagePanel = () => {
@@ -184,7 +225,7 @@ class FormComponent extends Component {
                                 <ModalComponent modalId="bs-another-modal-center"
                                                 modalTitle="آپلود عکس های کالا" >
                                     <FileUploadComponent toBeRender={true}
-                                                         currentProductId={this.state.selectedProductId}
+                                                         currentProductId={this.state.selectedImgProductId}
                                                          onHide={this.handleHideImagePanel}
                                                          onPostToApi={(images) => this.sendImagesToApi(images)}
                                                          editMode={this.state.imageInEditMode}
