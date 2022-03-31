@@ -4,7 +4,7 @@ const commonRouter = require('./routes/common.route');
 const categoryRouter = require('./routes/category.route');
 const vendorRouter = require('./routes/vendor.route')
 const productRouter = require('./routes/product.route');
-
+const productSpecRouter = require('./routes/productSpec.route');
 const databaseConnection = require('./services/mongo.service');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -24,6 +24,7 @@ cms_app.use('/common', commonRouter);
 cms_app.use('/product', productRouter);
 cms_app.use('/category', categoryRouter );
 cms_app.use('/vendor', vendorRouter);
+cms_app.use('/spec', productSpecRouter);
 
 cms_app.get('/',(req, res)=>{
     res.status(200).send({

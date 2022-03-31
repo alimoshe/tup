@@ -8,6 +8,7 @@ import ProductEntryComponent from "../products/productEntry";
 import SuccessAlertComponent from "../alert/successAlert";
 import FileUploadComponent from "../file-upload/fileUpload";
 import FailureAlertComponent from "../alert/failureAlert";
+import ProductSpecsComponent from "../products/productSpecs";
 
 const API_BASE_URL = "http://localhost:3080";
 
@@ -28,6 +29,7 @@ class FormComponent extends Component {
             selectedSpecProductId : -1,
             successAlertMessage :'',
             failureMessage:'',
+            productSpecs : [],
             imageInEditMode: false,
         }
         this.addImageButton = React.createRef();
@@ -87,9 +89,11 @@ class FormComponent extends Component {
         if(isNaN(tag) || !tag) {
             this.setState({selectedImgProductId: -1});
             this.setState({selectedSpecProductId : -1});
+
         }else {
             this.setState({selectedImgProductId: tag});
             this.setState({selectedSpecProductId: tag});
+            this.loadProductSpec();
         }
     }
 
@@ -174,13 +178,23 @@ class FormComponent extends Component {
         if(this.state.selectedSpecProductId === -1){
             e.target.attributes['data-target'].value = '.bs';
             this.setState({showFailureAlert : '', failureMessage:'لطفا ابتدا یک محصول را انتخاب نمایید'});
-            this.setState({imageInEditMode : true});
+            //this.setState({ : true});
         }else{
             e.target.attributes['data-target'].value = '.bs-description-modal';
             this.setState({showFailureAlert : 'none', failureMessage:''});
+            this.loadProductSpec();
         }
     }
+    loadProductSpec = () => {
+        if (this.state.selectedSpecProductId !== -1) {
 
+            fetch(`${API_BASE_URL}/spec/${this.state.selectedSpecProductId}`)
+                .then(data => data.json())
+                .then(data => {
+                    this.setState({productSpecs: data});
+                });
+        }
+    }
     handleHideImagePanel = () => {
         $('.close').click();
     }
@@ -243,9 +257,12 @@ class FormComponent extends Component {
                                 </ModalComponent>
                                 <ModalComponent modalId="bs-description-modal"
                                                 modalTitle="معرفی مشخصات کالا">
-                                    <div>
-                                        test
-                                    </div>
+
+                                    <ProductSpecsComponent productSpecifications={this.state.productSpecs}
+                                                           selectedProd = {this.state.selectedSpecProductId}
+                                    />
+
+
 
                                 </ModalComponent>
                                 <ModalComponent modalId="bs-another-modal-center"

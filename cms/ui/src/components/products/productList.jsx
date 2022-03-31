@@ -6,9 +6,11 @@ class ProductListComponent extends Component{
         this.selectCheckBox = React.createRef();
         this.state = {
             selectedProduct : -1,
+
         };
 
     }
+
     handleSelectRow = (e) => {
         if (e.target.checked) {
             const dataTag = Number(e.target.attributes['data-tag'].value);
