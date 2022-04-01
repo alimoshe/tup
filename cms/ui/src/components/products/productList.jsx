@@ -24,6 +24,10 @@ class ProductListComponent extends Component{
 
 
     }
+
+    handleRemoveProduct = (e) =>{
+
+    }
     render() {
         return (
             <div className="table-responsive">
@@ -51,7 +55,8 @@ class ProductListComponent extends Component{
                                 <th>{data.mainPrice}</th>
                                 <th>0</th>
                                 <th>موجود در انبار</th>
-                                <th><button className="btn btn-warning mr-1">ویرایس</button> <button className="btn btn-danger">حذف</button></th>
+                                <th><button className="btn btn-warning mr-1">ویرایس</button>
+                                    <button className="btn btn-danger" data-target={data.productId} onClick={this.handleRemoveProduct}>حذف</button></th>
                             </tr>
                         ))
 

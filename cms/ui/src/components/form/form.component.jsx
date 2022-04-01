@@ -9,6 +9,7 @@ import SuccessAlertComponent from "../alert/successAlert";
 import FileUploadComponent from "../file-upload/fileUpload";
 import FailureAlertComponent from "../alert/failureAlert";
 import ProductSpecsComponent from "../products/productSpecs";
+import ReactPaginate from "react-paginate";
 
 const API_BASE_URL = "http://localhost:3080";
 
@@ -31,6 +32,8 @@ class FormComponent extends Component {
             failureMessage:'',
             productSpecs : [],
             imageInEditMode: false,
+            paginationSelection : 1,
+            paginationButtonCount : 1,
         }
         this.addImageButton = React.createRef();
     }
@@ -39,23 +42,32 @@ class FormComponent extends Component {
 
 
     getAllProducts = (firstLoad) => {
-        fetch(`${API_BASE_URL}/product/`, {mode: 'cors'})
-            .then((data) => data.json())
-            .then(data => {
-                this.setState({products: data});
-                if(firstLoad !== 1){
-                    setTimeout(()=>{
-                        this.setState({showSuccessAlert:'none', successAlertMessage : 'کالای مورد نظر با موفقیت ثبت گردید'});
-                    },2000);
-                    this.setState({showSuccessAlert:''});
-                }
-            });
+        fetch(`${API_BASE_URL}/product/prodLen`)
+            .then(data => data.json())
+            .then(data => this.setState({paginationButtonCount : Math.ceil(data.dataLength / 5)},() => {
+
+
+                fetch(`${API_BASE_URL}/product/${this.state.paginationSelection || 1}/${5}`, {mode: 'cors'})
+                    .then(data => data.json())
+                    .then(data => {
+                        this.setState({products: data.products});
+                        if(firstLoad !== 1){
+                            setTimeout(()=>{
+                                this.setState({showSuccessAlert:'none', successAlertMessage : 'کالای مورد نظر با موفقیت ثبت گردید'});
+                            },2000);
+                            this.setState({showSuccessAlert:''});
+                        }
+                    });
+            }));
+
+
 
     }
 
     componentDidMount() {
         this.getAllProducts(1);
         this.setState({showFailureAlert :'none', failureMessage:''})
+
     }
 
 
@@ -195,6 +207,12 @@ class FormComponent extends Component {
                 });
         }
     }
+    handlePaginateClick = (e) => {
+        this.setState({paginationSelection : e.selected + 1}, () => {
+            this.getAllProducts(1);
+        })
+       // console.log(e.selected);
+    }
     handleHideImagePanel = () => {
         $('.close').click();
     }
@@ -244,6 +262,21 @@ class FormComponent extends Component {
                                         <ProductListComponent productList={this.state.products}
                                                               onSelectItem={tag => this.handleSelectItem(tag)}
                                         />
+
+                                            <ReactPaginate pageCount={this.state.paginationButtonCount}
+                                            containerClassName="pagination"
+                                            nextClassName="page-item"
+                                            nextLinkClassName="page-link"
+                                            previousClassName="page-item"
+                                            previousLinkClassName="page-link"
+                                            pageClassName="page-item"
+                                            pageLinkClassName="page-link"
+                                            previousLabel="قبلی"
+                                            nextLabel="بعدی"
+                                            onClick={this.handlePaginateClick}
+                                            />
+
+
                                     </div>
                                 </div>
 

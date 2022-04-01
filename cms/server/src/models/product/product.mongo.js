@@ -5,6 +5,15 @@ async function getAllProduct(){
         isVisible:true
     });
 }
+async function getAllPaginateProduct(query){
+    console.log(query);
+    return productModel.find({
+        isVisible:true
+    })
+        .skip(query.skip)
+        .limit(query.limit);
+}
+
 async function getProductsWithoutFilter(){
     return productModel.find({});
 }
@@ -100,4 +109,5 @@ module.exports = {
     getAllProductPics,
     clearProductPictures,
     assignImage,
+    getAllPaginateProduct,
 }

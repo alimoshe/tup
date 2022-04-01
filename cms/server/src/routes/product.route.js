@@ -1,11 +1,25 @@
 const express = require('express');
+const queryString = require('querystring');
 const productModel = require('../models/product/product.mongo');
 const categoryModel = require('../models/productCatgory/category.model');
+const utility = require('../util/util');
 const productRouter = express.Router();
 
-productRouter.get('/', async (req, res)=>{
+productRouter.get('/:page/:limit', async (req, res)=> {
+    const query = {
+        pageCount: req.params.page || 1,
+        limitCount: req.params.limit || 10
+    }
+    const pagination = utility.getPagination(query);
+    const paginated = await productModel.getAllPaginateProduct(pagination);
+    return res.status(200).send({products: paginated});
+
+});
+
+productRouter.get('/prodLen', async (req, res)=>{
     const _products = await productModel.getAllProduct();
-    return res.status(200).send(_products);
+    res.status(200).send({dataLength : _products.length});
+
 });
 
 productRouter.get('/:name', async (req, res)=>{
