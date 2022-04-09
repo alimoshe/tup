@@ -22,8 +22,8 @@ async function createProduct(product){
 }
 
 async function expireProduct(productId) {
-    //console.log(`Product ID : ${productId}`);
-    return productModel.updateOne({
+
+    return productModel.updateMany({
         productId: productId
     }, {
         isVisible: false,
@@ -31,6 +31,21 @@ async function expireProduct(productId) {
     });
 
 }
+
+async function updateProduct(productId, prod) {
+
+    return productModel.updateMany({
+        productId: productId
+    }, {
+        title:prod.title,
+        mainPrice:prod.mainPrice,
+        categoryId : prod.categoryId,
+        description:prod.description
+    });
+
+}
+
+
 
 async function updateProductImage(productId, images) {
     //console.log(`Product ID : ${productId}`);
@@ -41,6 +56,14 @@ async function updateProductImage(productId, images) {
 
     });
 
+}
+
+async function getProductById(prodId){
+    if(prodId){
+        return productModel.findOne({
+            productId : prodId
+        });
+    }
 }
 
 async function getAllProductPics(prodId){
@@ -110,4 +133,6 @@ module.exports = {
     clearProductPictures,
     assignImage,
     getAllPaginateProduct,
+    getProductById,
+    updateProduct,
 }

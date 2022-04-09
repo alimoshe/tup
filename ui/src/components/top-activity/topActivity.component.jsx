@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import MainPageProduct from "../main-page-product/mainPagetProd";
 
+const ActivityItem = () => {
+    return (
+        <React.Fragment>
+
+        </React.Fragment>
+    )
+}
+
 class TopActivity extends Component {
     render() {
         return (

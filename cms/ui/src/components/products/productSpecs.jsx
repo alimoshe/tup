@@ -98,7 +98,7 @@ class ProductSpecsComponent extends Component {
                         <div>
                             <input data-parsley-type="number"
                                    type="text"
-                                   className="form-control"
+           معرفی مشخصات کا                        className="form-control"
 
                                    ref={this.specValue}
                                    placeholder="فقط مقدار را وارد کنید"/>

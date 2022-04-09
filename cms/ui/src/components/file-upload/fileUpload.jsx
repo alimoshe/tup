@@ -52,7 +52,7 @@ class FileUploadComponent extends Component {
         this.props.onPostToApi(this.state.physicalFiles);
 
     }
-
+showConfirmModal
     handleAddImage = (image) => {
         const clonedImages = [...this.state.images];
         clonedImages.push(image);

@@ -5,7 +5,9 @@ async function getAllVendors(){
 }
 
 async function createVendor(vendor){
+    console.log(vendor);
     return vendorModel.create(vendor);
+
 }
 
 async function getVendorById(_vendorId){

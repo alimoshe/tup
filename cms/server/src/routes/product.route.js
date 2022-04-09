@@ -1,5 +1,4 @@
 const express = require('express');
-const queryString = require('querystring');
 const productModel = require('../models/product/product.mongo');
 const categoryModel = require('../models/productCatgory/category.model');
 const utility = require('../util/util');
@@ -51,12 +50,23 @@ productRouter.post('/', async (req, res) => {
 });
 
 productRouter.post('/rm', async (req, res)=>{
-    console.log(req.body);
-    if(req.body.body.dataTarget){
-        try {
 
-            await productModel.expireProduct(req.body.body.dataTarget);
-            res.status(200).send(req.body);
+    if(req.body.productId){
+        try {
+            const removed = await productModel.expireProduct(req.body.productId);
+            res.status(200).send({ok:true, data : removed});
+        }catch (err){
+            res.status(403).send({ok:false, error:err});
+        }
+    }
+})
+
+productRouter.post('/ed', async (req, res)=>{
+    console.log(req.body.productId);
+    if(req.body.productId){
+        try {
+            const updated = await productModel.updateProduct(req.body.productId, req.body.prod);
+            res.status(200).send({ok:true, data : updated});
         }catch (err){
             res.status(403).send({ok:false, error:err});
         }
@@ -64,7 +74,6 @@ productRouter.post('/rm', async (req, res)=>{
 })
 
 productRouter.post('/imgAssign', async (req, res)=>{
-    console.log(req.body);
     if(req.body.image && req.body.prodId) {
         try {
             await productModel.assignImage(req.body.image, req.body.prodId);

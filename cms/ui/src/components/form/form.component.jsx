@@ -34,6 +34,9 @@ class FormComponent extends Component {
             imageInEditMode: false,
             paginationSelection : 1,
             paginationButtonCount : 1,
+            productInEditMode : false,
+            productIdForEdit : -1,
+            productForEdit : {},
         }
         this.addImageButton = React.createRef();
     }
@@ -42,6 +45,7 @@ class FormComponent extends Component {
 
 
     getAllProducts = (firstLoad) => {
+        this.setState({productInEditMode : false});
         fetch(`${API_BASE_URL}/product/prodLen`)
             .then(data => data.json())
             .then(data => this.setState({paginationButtonCount : Math.ceil(data.dataLength / 5)},() => {
@@ -163,11 +167,6 @@ class FormComponent extends Component {
         }
     }
 
-
-    fillProductSpec = () => {
-
-    }
-
     handleAddImage = (image) => {
         const clonedImages = [...this.state.images];
         clonedImages.push(image);
@@ -213,6 +212,22 @@ class FormComponent extends Component {
         })
        // console.log(e.selected);
     }
+
+    handleEditProduct = (prodId) => {
+        console.log(prodId);
+        this.setState({productInEditMode : true});
+        this.state.products.map((product)=>{
+            if(Number(prodId) === Number(product.productId)){
+                this.setState({productForEdit:product, productInEditMode : true});
+            }
+        })
+
+    }
+
+    handleNewProduct = (e) => {
+        this.setState({productInEditMode : false});
+    }
+
     handleHideImagePanel = () => {
         $('.close').click();
     }
@@ -222,13 +237,14 @@ class FormComponent extends Component {
                 <FormToolbarComponent formHeader={this.props.formHeader}/>
                 <div className="row">
                     <div className="col-lg-12">
-                        <div className="card m-b-30">
+                        <div className="card m-b-30" >
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-lg-10">
                                         <h4 className="mt-0 header-title">{this.props.formType}</h4>
                                         <button type="button" className="btn btn-success waves-effect waves-light"
                                                 data-toggle="modal"
+                                                onClick={this.handleNewProduct}
                                                 data-target=".bs-example-modal-center">کالای جدید
                                         </button>
                                         <button type="button" className="btn btn-info waves-effect waves-light ml-2"
@@ -240,7 +256,7 @@ class FormComponent extends Component {
                                         <button type="button" className="btn btn-info waves-effect waves-light ml-2"
                                                 data-toggle="modal"
                                                 onClick={this.selectProductForSpecifications}
-                                                data-target=".bs-description-modal0">معرفی توضبحات
+                                                data-target=".bs-message-modal">معرفی توضبحات
                                         </button>
                                     </div>
                                     <div className="col-lg-2 pt-4">
@@ -260,7 +276,9 @@ class FormComponent extends Component {
                                 <div className="row">
                                     <div className="col-lg-12">
                                         <ProductListComponent productList={this.state.products}
+                                                              onDeleteItem={() => this.getAllProducts(1)}
                                                               onSelectItem={tag => this.handleSelectItem(tag)}
+                                                              onEditItem={(prodId)=>this.handleEditProduct(prodId)}
                                         />
 
                                             <ReactPaginate pageCount={this.state.paginationButtonCount}
@@ -282,9 +300,12 @@ class FormComponent extends Component {
 
 
                                 <ModalComponent modalId="bs-example-modal-center"
-                                                modalTitle="معرفی کالا">
+                                                modalTitle={this.state.productInEditMode === true ? 'ویرایش کالا' : "معرفی کالا"}>
                                     <ProductEntryComponent
                                         onHide={this.handleHideImagePanel}
+                                        getEditMode={() => {return this.state.productInEditMode}}
+                                        editMode={this.state.productInEditMode}
+                                        productForEdit={this.state.productForEdit}
                                         onSubmit={(e) => this.getAllProducts(0)}
                                     />
                                 </ModalComponent>
