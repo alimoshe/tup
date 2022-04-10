@@ -5,7 +5,7 @@ import productApi from '../../api/product';
 // Define States
 
 
-const load = () =>{
+const load = () => {
     console.log(productApi.loadProduct());
 }
 
@@ -23,23 +23,18 @@ const ProductProfile = ({formHeader, formType}) => {
             <FormToolbarComponent formHeader={formHeader}/>
             <div className="row">
                 <div className="col-lg-12">
-                    <div className="card m-b-10">
-                        <div className="card-body">
+                    <div className="row">
+                        <div className="col-lg-2">`
                             <div className="form-group">
-                                <label>کد اقتصادی</label>
+                                <label>کد کالا</label>
                                 <input type="text"
                                        data-parsley-type="string"
                                        id="txtSearch"
                                        className="form-control"
                                        required
                                        onChange={filterProduct}
-                                       placeholder="نام کالا"/>
+                                       placeholder="کد کالا"/>
                             </div>
-                            <button type="button" className="btn btn-success waves-effect waves-light"
-                                    data-toggle="modal"
-                                    onClick={load}
-                                    data-target=".bs-example-modal-center">تامین کننده جدید
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -47,15 +42,15 @@ const ProductProfile = ({formHeader, formType}) => {
 
             <div className="row">
                 <div className="col-lg-12">
-                   <div className="row">
-                       <div className="col-lg-6">
-                           <div className="card m-b-30">
-                               <div className="card-body">
-
-                               </div>
-                           </div>
-                       </div>
-                   </div>
+                    <div className="row">
+                        <div className="col-lg-6">
+                            <div className="card m-b-30">
+                                <div className="card-body">
+                                    <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </React.Fragment>
