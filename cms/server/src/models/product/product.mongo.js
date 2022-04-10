@@ -6,12 +6,16 @@ async function getAllProduct(){
     });
 }
 async function getAllPaginateProduct(query){
-    console.log(query);
+
     return productModel.find({
         isVisible:true
     })
         .skip(query.skip)
         .limit(query.limit);
+}
+
+async function getProductsByVendor(_vendorId){
+    return productModel.findOne({vendorId : _vendorId})
 }
 
 async function getProductsWithoutFilter(){
@@ -95,7 +99,6 @@ async function clearProductPictures(prodId) {
 
 async function assignImage(img, prodId) {
 
-    console.log(img, prodId);
     return productModel.findOne({
         productId: prodId,
         isVisible:true
@@ -110,8 +113,6 @@ async function assignImage(img, prodId) {
             }
         }).exec();
     });
-
-
 }
 
 async function getProductsByTitle(searchTitle){
@@ -123,16 +124,18 @@ async function getProductsByTitle(searchTitle){
 }
 
 module.exports = {
-    getAllProduct,
     createProduct,
+    getAllProduct,
     getProductsByTitle,
-    expireProduct,
     getProductsWithoutFilter,
-    updateProductImage,
     getAllProductPics,
-    clearProductPictures,
-    assignImage,
     getAllPaginateProduct,
     getProductById,
+    getProductsByVendor,
+    updateProductImage,
+    expireProduct,
+    clearProductPictures,
+    assignImage,
     updateProduct,
+
 }

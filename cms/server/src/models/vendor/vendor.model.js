@@ -1,13 +1,21 @@
 const vendorModel = require('./vnedor.mongo');
 
 async function getAllVendors(){
-    return vendorModel.find({});
+    return vendorModel.find({
+        visible:true
+    });
+}
+
+async function getVendorLength(){
+    return vendorModel.countDocuments({});
 }
 
 async function createVendor(vendor){
-    console.log(vendor);
-    return vendorModel.create(vendor);
-
+    getVendorLength().then(len => {
+        vendor.vendorId = len + 1;
+        vendorModel.create(vendor);
+    })
+    return {ok : true};
 }
 
 async function getVendorById(_vendorId){
@@ -15,8 +23,15 @@ async function getVendorById(_vendorId){
         vendorId : _vendorId
     });
 }
+
+async function expireVendor(_vendorId) {
+    return vendorModel.updateMany({vendorId : _vendorId},
+        {expireDate : Date.now(), visible:false});
+}
 module.exports = {
     getAllVendors,
     getVendorById,
-    createVendor
+    getVendorLength,
+    createVendor,
+    expireVendor,
 }

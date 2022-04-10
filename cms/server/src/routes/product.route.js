@@ -15,6 +15,8 @@ productRouter.get('/:page/:limit', async (req, res)=> {
 
 });
 
+
+
 productRouter.get('/prodLen', async (req, res)=>{
     const _products = await productModel.getAllProduct();
     res.status(200).send({dataLength : _products.length});

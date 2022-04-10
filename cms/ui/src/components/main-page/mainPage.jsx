@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import TopBarComponent from "../top-bar/topBar.component";
 import LeftSideMenuComponent from "../left-side-menu/leftSideMenu.component";
 import FormComponent from "../form/form.component";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import VendorComponent from "../../pages/vendor-page/vendorComponent";
+import ProductProfile from "../../pages/cardex/productCardex";
 
 class MainPageComponent extends Component {
     render() {
@@ -25,8 +26,12 @@ class MainPageComponent extends Component {
                                     <Route exact path="/vendors/">
                                         <VendorComponent formHeader="معرفی تامین کنندگان"/>
                                     </Route>
+                                    <Route path="/product-profile">
+                                        <ProductProfile formHeader=" کاردکس"
+                                                        formType="کاردکس کلی کالا"
+                                        />
+                                    </Route>
                                 </Switch>
-
 
 
                             </div>

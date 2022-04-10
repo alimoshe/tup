@@ -3,10 +3,9 @@ import FormToolbarComponent from "../../components/form-toolbar/formToolbar";
 import {useRecoilState, useRecoilValue} from "recoil";
 import vendorGlobal from "../../global/vendor/vendor.global";
 import axios from "axios";
-import {Route, Switch, useRouteMatch} from "react-router-dom";
-import FailureAlertComponent from "../../components/alert/failureAlert";
-import SuccessAlertComponent from "../../components/alert/successAlert";
+import $ from 'jquery';
 import ReactPaginate from "react-paginate";
+import MessageBoxComponent from "../../components/messageBox/messageBox";
 
 
 const API_BASE_URL = "http://localhost:3080";
@@ -19,6 +18,7 @@ const NewVendor = ({
                        validationFail,
                        saveOK,
                        onCancel,
+                       selected
                    }) => {
     const validation = () => {
         const title = vendorTitle.current.value;
@@ -40,7 +40,7 @@ const NewVendor = ({
 
             const result = await axios.post(`${API_BASE_URL}/vendor`,
                 {
-                    vendorId: allItemsCont.length + 1,
+                    vendorId: -1,
                     vendorTitle: vendorTitle.current.value,
                     vendorAddress: vendorAddress.current.value,
                     vendorEcoCode: vendorEcoCode.current.value
@@ -59,6 +59,20 @@ const NewVendor = ({
     const useCancelForm = (e) => {
         e.preventDefault();
         onCancel();
+    }
+
+    if (selected !== 0) {
+        const toBeEdit = allItemsCont.filter((vendor) => {
+            return vendor.vendorId === selected;
+        });
+        if (toBeEdit.length > 0) {
+            vendorTitle.current.value = toBeEdit[0].vendorTitle;
+            vendorAddress.current.value = toBeEdit[0].vendorAddress;
+            vendorEcoCode.current.value = toBeEdit[0].vendorEcoCode;
+        }
+        console.log(toBeEdit);
+    } else {
+        // TODO Clear all input fields
     }
     return (
         <div className="row" style={{display: render === true ? '' : 'none'}}>
@@ -79,6 +93,7 @@ const NewVendor = ({
                                data-parsley-type="string"
                                className="form-control"
                                required
+                               id="txtVendorAddress"
                                ref={vendorAddress}
                                placeholder="آدرس"/>
                     </div>
@@ -86,6 +101,7 @@ const NewVendor = ({
                         <label>کد اقتصادی</label>
                         <input type="text"
                                data-parsley-type="string"
+                               id="txtEcoCode"
                                className="form-control"
                                required
                                ref={vendorEcoCode}
@@ -108,8 +124,7 @@ const NewVendor = ({
     )
 }
 
-
-const VendorList = (props) => {
+const VendorList = ({onEdit, allVendors, onRemove}) => {
 
     return (
 
@@ -126,7 +141,7 @@ const VendorList = (props) => {
             {
 
 
-                props.allVendors.map((data) => (
+                allVendors.map((data) => (
                     <tr key={data.vendorId}>
                         <td>{data.vendorId}</td>
                         <td>{data.vendorTitle}</td>
@@ -134,13 +149,14 @@ const VendorList = (props) => {
                             <button className="btn btn-warning mr-1"
                                     data-target=".bs-example-modal-center"
                                     data-toggle="modal"
-
+                                    onClick={onEdit}
                                     data-tag={data.vendorId}
-                            >ویرایس
+                            >ویرایش
                             </button>
                             &nbsp;
                             <button className="btn btn-danger ml-1"
                                     data-tag={data.vendorId}
+                                    onClick={onRemove}
                                     data-toggle="modal"
                                     data-target=".bs-message-modal">حذف
                             </button>
@@ -156,20 +172,11 @@ const VendorList = (props) => {
 }
 
 
-function VendorsTable(props) {
-    const [vendors, setVendors] = useRecoilState(vendorGlobal.vendorState);
+function VendorsTable({editVendor, render, removeVendor, vendors}) {
 
-    const fetchData = async () => {
-        const result = await axios.get(`${API_BASE_URL}/vendor`);
-        setVendors(result.data);
-    };
-    useEffect(() => {
-        const res = fetchData();
-    }, [])
-    //console.log(vendors.data);
-    //return <div>test</div>
-    if (props.render) {
-        return <VendorList allVendors={vendors}/>
+
+    if (render) {
+        return <VendorList allVendors={vendors} onEdit={editVendor} onRemove={removeVendor}/>
     } else {
         return <></>
     }
@@ -183,13 +190,23 @@ const useVendorsByCaller = () => {
         setVendors(result.data);
     };
 }
-const VendorComponent = (props) => {
+const VendorComponent = () => {
 
     const [newPanel, setNewPanel] = useState(false);
     const [listPanel, setListPanel] = useState(true);
     const [paginationButtonCount, setPaginationButtonCount] = useState(1);
     const [validationFail, setValidationFail] = useState('none');
+    const [vendorToRemove, setVendorToRemove] = useState(0);
+    const [selectedVendor, setSelectedVendor] = useState(0);
+    const [vendors, setVendors] = useRecoilState(vendorGlobal.vendorState);
 
+    const fetchData = async () => {
+        const result = await axios.get(`${API_BASE_URL}/vendor`);
+        setVendors(result.data);
+    };
+    useEffect(() => {
+        const res = fetchData();
+    }, [])
 
     useEffect(() => {
         setValidationFail('none');
@@ -203,6 +220,7 @@ const VendorComponent = (props) => {
     const newVendorClick = () => {
         setListPanel(false);
         setNewPanel(true);
+        setSelectedVendor(0);
     }
 
     const validation = () => {
@@ -214,7 +232,7 @@ const VendorComponent = (props) => {
         setListPanel(true);
         setNewPanel(false);
 
-        useVendorsByCaller();
+        fetchData().then();
     }
 
     const useCancel = (e) => {
@@ -225,9 +243,37 @@ const VendorComponent = (props) => {
     const handlePaginateClick = (e) => {
         console.log(e);
     }
+
+    const onEditVendor = (e) => {
+        const selVendor = e.target.attributes['data-tag'].value;
+        setSelectedVendor(Number(selVendor));
+
+        setListPanel(false);
+        setNewPanel(true);
+    }
+    const setRemoveVendorId = (e) => {
+        const selVendor = e.target.attributes['data-tag'].value;
+        setVendorToRemove(Number(selVendor));
+
+    }
+    const handleConfirmRemove = () => {
+        axios.post(`${API_BASE_URL}/vendor/rm`,
+            {vendorId: Number(vendorToRemove)})
+            .then(data => {
+                if(data.statusText.toLowerCase() === 'ok'){
+                    fetchData().then();
+                    $('.close').click();
+                }
+            });
+
+
+    }
     return (
         <React.Fragment>
-
+            <MessageBoxComponent messageTitle="حذف تامین کننده"
+                                 message="آیا از حذف تامین کننده اطمینان دارید ؟"
+                                 onOk={handleConfirmRemove}
+                                 onCancel={() => $('.close').click()}/>
             <FormToolbarComponent formHeader="معرفی تامین گنندگان کالا"/>
 
             <div className="row">
@@ -236,12 +282,16 @@ const VendorComponent = (props) => {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-lg-10">
-                                    <h4 className="mt-0 header-title"> </h4>
-                                    <button type="button" className="btn btn-success waves-effect waves-light"
-                                            data-toggle="modal"
-                                            onClick={newVendorClick}
-                                            data-target=".bs-example-modal-center">تامین کننده جدید
-                                    </button>
+                                    {/*<h4 className="mt-0 header-title"></h4>*/}
+                                    {
+                                        !newPanel &&
+                                        <button type="button" className="btn btn-success waves-effect waves-light"
+                                                data-toggle="modal"
+                                                onClick={newVendorClick}
+                                                data-target=".bs-example-modal-center">تامین کننده جدید
+                                        </button>
+                                    }
+
 
                                 </div>
                                 <div className="col-lg-2">
@@ -254,27 +304,33 @@ const VendorComponent = (props) => {
                                 <div className="col-lg-12">
 
 
-                                    <VendorsTable render={listPanel}/>
+                                    <VendorsTable render={listPanel}
+                                                  editVendor={onEditVendor}
+                                                  removeVendor={setRemoveVendorId}
+                                                  vendors={vendors}
+                                    />
                                     <NewVendor render={newPanel}
                                                vendorTitle={vendorTitle}
                                                vendorEcoCode={vendorEcoCode}
                                                vendorAddress={vendorAddress}
                                                validationFail={validation}
                                                saveOK={useOk}
+                                               selected={selectedVendor}
                                                onCancel={useCancel}
+
                                     />
-                                    <div style={{display:listPanel === true ? '' : 'none'}}>
-                                    <ReactPaginate pageCount={paginationButtonCount}
-                                                   containerClassName="pagination"
-                                                   nextClassName="page-item"
-                                                   nextLinkClassName="page-link"
-                                                   previousClassName="page-item"
-                                                   previousLinkClassName="page-link"
-                                                   pageClassName="page-item"
-                                                   pageLinkClassName="page-link"
-                                                   previousLabel="قبلی"
-                                                   nextLabel="بعدی"
-                                                   onClick={handlePaginateClick} />
+                                    <div style={{display: listPanel === true ? '' : 'none'}}>
+                                        <ReactPaginate pageCount={paginationButtonCount}
+                                                       containerClassName="pagination"
+                                                       nextClassName="page-item"
+                                                       nextLinkClassName="page-link"
+                                                       previousClassName="page-item"
+                                                       previousLinkClassName="page-link"
+                                                       pageClassName="page-item"
+                                                       pageLinkClassName="page-link"
+                                                       previousLabel="قبلی"
+                                                       nextLabel="بعدی"
+                                                       onClick={handlePaginateClick}/>
                                     </div>
 
 
