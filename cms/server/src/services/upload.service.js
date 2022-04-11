@@ -7,6 +7,10 @@ function copyImage(source, callback){
         path.join(__dirname,'..', 'public', 'images', baseFileName), callback);
 }
 
+function convertImageToPath(imageName){
+    const baseFileName = path.basename(imageName);
+}
 module.exports = {
     copyImage,
+    convertImageToPath,
 }

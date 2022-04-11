@@ -1,15 +1,27 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import FormToolbarComponent from "../../components/form-toolbar/formToolbar";
 import productApi from '../../api/product';
+
 
 // Define States
 
 
 
-const PicturesCard = ({pictures}) =>{
+const PicturesCard = ({products}) => {
+
+    if (products.length > 0) {
+        products[0].pictures.map((img) => {
+            productApi.loadImagesPath(img).then();
+        })
+    }
+
     return(
         <React.Fragment>
-            {pictures[0].title}
+            <img className="img-thumbnail"
+                 alt="200x200"
+                 style={{width: '200px', height: '200px'}}
+                 src="assets/images/small/img-3.jpg"
+                 data-holder-rendered="true"/>
         </React.Fragment>
     );
 }
@@ -19,17 +31,17 @@ const ProductProfile = ({formHeader, formType}) => {
     const [products, setProducts] = useState([]);
     const [filter, setFilter] = useState(0);
 
-    const filterProduct = (e) => {
-        setFilter(e.target.value);
-    }
-
-    const load = () => {
-
-        productApi.loadProduct(filter)
+    const load = (e) => {
+        e.preventDefault();
+        console.log(filter);
+        productApi.loadProduct()
             .then(data => {
                 setProducts(data);
             });
+    }
 
+    const setFilterProduct = (e) =>{
+        setFilter(Number(e.target.value));
     }
 
     return (
@@ -46,7 +58,7 @@ const ProductProfile = ({formHeader, formType}) => {
                                        id="txtSearch"
                                        className="form-control"
                                        required
-                                       onChange={filterProduct}
+                                       onChange={setFilterProduct}
                                        placeholder="کد کالا"/>
                             </div>
                         </div>
@@ -68,7 +80,7 @@ const ProductProfile = ({formHeader, formType}) => {
                             <div className="card m-b-30">
                                 <div className="card-body">
                                     <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
-                                    <PicturesCard pictures={products}/>
+                                    <PicturesCard products={products || []}/>
                                 </div>
                             </div>
                         </div>
