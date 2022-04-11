@@ -6,16 +6,16 @@ import productApi from '../../api/product';
 // Define States
 
 
-
-const PicturesCard = ({products}) => {
-
-    if (products.length > 0) {
-        products[0].pictures.map((img) => {
-            productApi.loadImagesPath(img).then();
-        })
+const PicturesCard = ({products, filter}) => {
+    const filterFunc = (item, filter) => {
+        return Number(item.productId) === Number(filter);
+    }
+    if (filter.length > 0) {
+        const filtered = products.filter(filterFunc);
+        console.log(filtered);
     }
 
-    return(
+    return (
         <React.Fragment>
             <img className="img-thumbnail"
                  alt="200x200"
@@ -23,7 +23,8 @@ const PicturesCard = ({products}) => {
                  src="assets/images/small/img-3.jpg"
                  data-holder-rendered="true"/>
         </React.Fragment>
-    );
+    )
+
 }
 
 const ProductProfile = ({formHeader, formType}) => {
@@ -40,7 +41,7 @@ const ProductProfile = ({formHeader, formType}) => {
             });
     }
 
-    const setFilterProduct = (e) =>{
+    const setFilterProduct = (e) => {
         setFilter(Number(e.target.value));
     }
 
@@ -80,7 +81,9 @@ const ProductProfile = ({formHeader, formType}) => {
                             <div className="card m-b-30">
                                 <div className="card-body">
                                     <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
-                                    <PicturesCard products={products || []}/>
+                                    <PicturesCard products={products || []}
+                                                  filter={filter}
+                                    />
                                 </div>
                             </div>
                         </div>
