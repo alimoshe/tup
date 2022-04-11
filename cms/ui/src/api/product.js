@@ -25,9 +25,15 @@ const productApi = {
         await axios.post(`${API_BASE_URL}/common/getImg`, {imageName: img})
             .then(data => {
                 picturePath = data;
+
             });
         return picturePath;
-    }
+    },
+     loadImageFile : async (prodId, row) => {
+        return await fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
+
+    },
+
 }
 
 

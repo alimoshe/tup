@@ -5,27 +5,82 @@ import productApi from '../../api/product';
 
 // Define States
 
+const PicturesCard =  ({products, filter, addImage}) => {
+    const [prodImage, setProdImage] = useState([]);
 
-const PicturesCard = ({products, filter}) => {
-    const filterFunc = (item, filter) => {
-        return Number(item.productId) === Number(filter);
+
+    if (Number(filter) > 0) {
+        const filtered = products.filter((item) => {
+            return Number(item.productId) === Number(filter);
+        });
+
+
+        if (filtered.length === 1) {
+            const fetchImg = async () => {
+                let images = [];
+                filtered[0].pictures.map(async (data, index)=> {
+                    const res = await productApi.loadImageFile(filter, index);
+                    const imgBLOB = await res.blob();
+                    const imageObjectUrl = URL.createObjectURL(imgBLOB);
+                    images.push(imageObjectUrl);
+                    addImage(imageObjectUrl);
+
+
+                })
+                return images;
+            }
+
+            // var imagesTag = [];
+            // fetchImg().then(sample => {
+            //
+            //     sample.map((data,index) => {
+            //         console.log(data);
+            //         imagesTag.push(`<img class="img-thumbnail"
+            //          alt="200x200"
+            //          style=${{width: '200px', height: '200px'}}
+            //          src=${data} data-holder-rendered="true" />`);
+            //
+            //     })
+            //     console.log(imagesTag);
+            // });
+
+            return(
+
+            <React.Fragment>
+                <PicPane Pics={fetchImg().then(data => $scope.names = data)}/>
+            </React.Fragment>
+            )
+            /*
+            filtered[0].pictures.map((img) => {
+                productApi.loadImagesPath(img).then((record) => {
+                    path.push(record.data.path);
+                })
+            });*/
+        }
     }
-    if (filter.length > 0) {
-        const filtered = products.filter(filterFunc);
-        console.log(filtered);
-    }
-
-    return (
-        <React.Fragment>
-            <img className="img-thumbnail"
-                 alt="200x200"
-                 style={{width: '200px', height: '200px'}}
-                 src="assets/images/small/img-3.jpg"
-                 data-holder-rendered="true"/>
-        </React.Fragment>
-    )
-
+return <></>
 }
+
+const PicPane = ({Pics}) => {
+    const persons = Pics.map((person) => {
+        return person;
+    })
+    console.log(persons);
+return(
+    <div>
+        {
+            Pics.map(img => (
+                <img className="img-thumbnail"
+                     alt="200x200"
+                     style={{width: '200px', height: '200px'}}
+                     src={img} data-holder-rendered="true" />
+            ))
+        }
+    </div>
+)
+}
+
+
 
 const ProductProfile = ({formHeader, formType}) => {
 
@@ -34,7 +89,6 @@ const ProductProfile = ({formHeader, formType}) => {
 
     const load = (e) => {
         e.preventDefault();
-        console.log(filter);
         productApi.loadProduct()
             .then(data => {
                 setProducts(data);
@@ -43,6 +97,10 @@ const ProductProfile = ({formHeader, formType}) => {
 
     const setFilterProduct = (e) => {
         setFilter(Number(e.target.value));
+    }
+
+    const addProdImage = (imageName) =>{
+
     }
 
     return (
@@ -83,6 +141,7 @@ const ProductProfile = ({formHeader, formType}) => {
                                     <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
                                     <PicturesCard products={products || []}
                                                   filter={filter}
+                                                  addImage={addProdImage}
                                     />
                                 </div>
                             </div>

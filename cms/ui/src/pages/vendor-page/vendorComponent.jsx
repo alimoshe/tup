@@ -265,9 +265,7 @@ const VendorComponent = () => {
                     $('.close').click();
                 }
             });
-
-
-    }
+}
     return (
         <React.Fragment>
             <MessageBoxComponent messageTitle="حذف تامین کننده"

@@ -123,6 +123,11 @@ async function getProductsByTitle(searchTitle){
     });
 }
 
+async function getAllProductImage(prodId) {
+    return productModel.find({productId : prodId} , {
+        pictures : 1
+    })
+}
 module.exports = {
     createProduct,
     getAllProduct,
@@ -137,5 +142,6 @@ module.exports = {
     clearProductPictures,
     assignImage,
     updateProduct,
+    getAllProductImage,
 
 }

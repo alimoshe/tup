@@ -3,6 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const productModel = require('../models/product/product.mongo');
+const {contentDisposition} = require("express/lib/utils");
 const commonRouter = express.Router();
 var imgName = '';
 const storage = multer.diskStorage({
@@ -64,5 +65,14 @@ commonRouter.post('/getImg', (req, res)=>{
     const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', imageName);
     return res.status(200).send({ok: true, path : absolutePath});
 })
+
+commonRouter.get('/getImg/:id/:row', async (req, res)=>{
+    const prodId = req.params.id;
+    const picRow = req.params.row;
+    const product = await productModel.getAllProductPics(prodId);
+
+    return res.status(200).sendFile(path.join(__dirname, '..', '..', 'public', 'images', product.pictures[picRow]));
+})
+
 
 module.exports = commonRouter;
