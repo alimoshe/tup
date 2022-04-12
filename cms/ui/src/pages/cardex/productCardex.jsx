@@ -25,10 +25,12 @@ const PicturesCard =  ({products, filter, addImage}) => {
                     images.push(imageObjectUrl);
                     addImage(imageObjectUrl);
 
-
                 })
                 return images;
             }
+
+
+
 
             // var imagesTag = [];
             // fetchImg().then(sample => {
@@ -47,7 +49,7 @@ const PicturesCard =  ({products, filter, addImage}) => {
             return(
 
             <React.Fragment>
-                <PicPane Pics={fetchImg().then(data => $scope.names = data)}/>
+                <PicPane Pics={[]}/>
             </React.Fragment>
             )
             /*
@@ -62,10 +64,7 @@ return <></>
 }
 
 const PicPane = ({Pics}) => {
-    const persons = Pics.map((person) => {
-        return person;
-    })
-    console.log(persons);
+
 return(
     <div>
         {
