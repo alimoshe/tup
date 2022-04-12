@@ -67,7 +67,6 @@ const productApi = {
                     if (result.length < 1) {
                         failListener();
                     } else {
-                        console.log(result);
                         okListener(result);
                     }
                 }
