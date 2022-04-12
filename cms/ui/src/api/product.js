@@ -2,23 +2,36 @@ import axios from "axios";
 
 const API_BASE_URL = 'http://localhost:3080';
 const productApi = {
-    loadProduct: async (prodId) => {
+    loadPicturesLength: (prodId, okListener, failListener) => {
         let loaded = [];
         const url = `${API_BASE_URL}/product/all`;
-        await fetch(url)
+        fetch(url)
             .then(data => data.json())
             .catch(err => {console.log(err)})
             .then(data => {
                 loaded = data
-            });
+                const result = loaded.filter(item => {
+                    return Number(item.productId) === Number(prodId);
+                })
 
-        if (prodId) {
-            return loaded.filter((item) => {
-                return Number(item.productId) === Number(prodId);
-            })
-        } else {
-            return loaded;
-        }
+                if(result.length < 1 ){
+                    failListener();
+                }
+
+                result[0].pictures.map((data, row)=>{
+                    let converted = [];
+                    fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
+                        .then(async (binaryImage) => {
+                            const imgBLOB =  await binaryImage.blob();
+                            const imageObjectUrl = URL.createObjectURL(imgBLOB);
+                            converted.push(imageObjectUrl);
+                        })
+                    okListener(converted);
+                })
+
+            });
+        return 'test';
+
     },
     loadImagesPath: async (img) => {
         let picturePath = '';
@@ -29,8 +42,9 @@ const productApi = {
             });
         return picturePath;
     },
-     loadImageFile : async (prodId, row) => {
-        return await fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
+     loadImageFile : (prodId, row) => {
+        console.log(prodId);
+        return fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
 
     },
 

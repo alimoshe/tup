@@ -6,6 +6,7 @@ import axios from "axios";
 import $ from 'jquery';
 import ReactPaginate from "react-paginate";
 import MessageBoxComponent from "../../components/messageBox/messageBox";
+import FailureAlertComponent from "../../components/alert/failureAlert";
 
 
 const API_BASE_URL = "http://localhost:3080";
@@ -268,11 +269,13 @@ const VendorComponent = () => {
 }
     return (
         <React.Fragment>
+
             <MessageBoxComponent messageTitle="حذف تامین کننده"
                                  message="آیا از حذف تامین کننده اطمینان دارید ؟"
                                  onOk={handleConfirmRemove}
                                  onCancel={() => $('.close').click()}/>
             <FormToolbarComponent formHeader="معرفی تامین گنندگان کالا"/>
+
 
             <div className="row">
                 <div className="col-lg-12">
