@@ -45,7 +45,7 @@ const productApi = {
         return picturePath;
     },
     loadImageFile: (prodId, row) => {
-        console.log(prodId);
+
         return fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
 
     },
@@ -67,6 +67,7 @@ const productApi = {
                     if (result.length < 1) {
                         failListener();
                     } else {
+                        console.log(result);
                         okListener(result);
                     }
                 }

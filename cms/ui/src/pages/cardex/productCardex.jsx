@@ -4,7 +4,6 @@ import productApi from '../../api/product';
 import FailureAlertComponent from "../../components/alert/failureAlert";
 
 
-
 // Define States
 
 const PicturesCard = ({imageName, reload}) => {
@@ -19,25 +18,34 @@ const PicturesCard = ({imageName, reload}) => {
 
 
 const ProductVendors = ({product}) => {
+    if (product.vendors) {
+        return (
+            <table className="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">کد تامین کننده</th>
+                    <th scope="col"> نام تامین کننده</th>
+                    <th scope="col">عملیات</th>
+                </tr>
 
-    return (
-        <table className="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">کد تامین کننده</th>
-                <th scope="col"> نام تامین کننده</th>
-                <th scope="col">عملیات</th>
-            </tr>
-
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    );
+                </thead>
+                <tbody>
+                {
+                    product.vendors.map((data, index) => (
+                        <tr key={index}>
+                            <td>{data.vendorId}</td>
+                            <td>{data.vendorTitle}</td>
+                        </tr>
+                    ))
+                }
+                </tbody>
+            </table>
+        );
+    } else
+        return <></>
 }
 
 const ProductProfile = ({formHeader, formType}) => {
-
 
 
     const [images, setImages] = useState([]);
@@ -46,7 +54,7 @@ const ProductProfile = ({formHeader, formType}) => {
     const refFilter = useRef('0');
 
     const filterProduct = (filter) => {
-        if(filter && filter > 0){
+        if (filter && filter > 0) {
             productApi.filterProduct(filter, (selected) => {
                 setProduct(selected);
                 console.log(product);
@@ -124,7 +132,7 @@ const ProductProfile = ({formHeader, formType}) => {
                             <div className="card m-b-30">
                                 <div className="card-body">
                                     <h4 className="mt-0 header-title">تامین کنندگان کالا</h4>
-                                    <ProductVendors product={product} />
+                                    <ProductVendors product={product}/>
                                 </div>
                             </div>
                         </div>
