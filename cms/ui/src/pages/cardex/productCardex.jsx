@@ -4,6 +4,7 @@ import productApi from '../../api/product';
 import FailureAlertComponent from "../../components/alert/failureAlert";
 
 
+
 // Define States
 
 const PicturesCard = ({imageName, reload}) => {
@@ -17,23 +18,58 @@ const PicturesCard = ({imageName, reload}) => {
 }
 
 
+const ProductVendors = ({product}) => {
+
+    return (
+        <table className="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">کد تامین کننده</th>
+                <th scope="col"> نام تامین کننده</th>
+                <th scope="col">عملیات</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    );
+}
+
 const ProductProfile = ({formHeader, formType}) => {
 
 
-    const [reload, setReload] = useState(0);
+
     const [images, setImages] = useState([]);
+    const [product, setProduct] = useState({});
     const [showFailMessage, setShowFailMessage] = useState('none');
     const refFilter = useRef('0');
-    const load = (e) => {
 
-        e.preventDefault();
-        const filter = Number(refFilter.current.value);
+    const filterProduct = (filter) => {
+        if(filter && filter > 0){
+            productApi.filterProduct(filter, (selected) => {
+                setProduct(selected);
+                console.log(product);
+            });
+        }
+    }
+
+    const loadImg = (filter) => {
         productApi.loadPicturesLength(filter,
             (img) => {
                 setShowFailMessage('none');
                 setImages(img)
             },
             () => setShowFailMessage(''));
+    }
+
+
+    const load = (e) => {
+
+        e.preventDefault();
+        const filter = Number(refFilter.current.value);
+        loadImg(filter);
+        filterProduct(filter);
     }
 
     return (
@@ -76,10 +112,19 @@ const ProductProfile = ({formHeader, formType}) => {
                                     <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
                                     {
                                         images.map((data, index) => (
-                                            <PicturesCard key={index} imageName={data} reload={reload}/>
+                                            <PicturesCard key={index}
+                                                          imageName={data}/>
                                         ))
                                     }
 
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-6">
+                            <div className="card m-b-30">
+                                <div className="card-body">
+                                    <h4 className="mt-0 header-title">تامین کنندگان کالا</h4>
+                                    <ProductVendors product={product} />
                                 </div>
                             </div>
                         </div>

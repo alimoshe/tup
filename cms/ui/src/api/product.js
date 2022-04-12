@@ -7,22 +7,24 @@ const productApi = {
         const url = `${API_BASE_URL}/product/all`;
         fetch(url)
             .then(data => data.json())
-            .catch(err => {console.log(err)})
+            .catch(err => {
+                console.log(err)
+            })
             .then(data => {
                 loaded = data
                 const result = loaded.filter(item => {
                     return Number(item.productId) === Number(prodId);
                 })
 
-                if(result.length < 1 ){
+                if (result.length < 1) {
                     failListener();
                 }
 
-                result[0].pictures.map((data, row)=>{
+                result[0].pictures.map((data, row) => {
                     let converted = [];
                     fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
                         .then(async (binaryImage) => {
-                            const imgBLOB =  await binaryImage.blob();
+                            const imgBLOB = await binaryImage.blob();
                             const imageObjectUrl = URL.createObjectURL(imgBLOB);
                             converted.push(imageObjectUrl);
                         })
@@ -42,11 +44,36 @@ const productApi = {
             });
         return picturePath;
     },
-     loadImageFile : (prodId, row) => {
+    loadImageFile: (prodId, row) => {
         console.log(prodId);
         return fetch(`${API_BASE_URL}/common/getImg/${prodId}/${row}`)
 
     },
+
+    filterProduct: (prodId, okListener, failListener = () => {
+    }) => {
+        const url = `${API_BASE_URL}/product/all`;
+        let loaded = [];
+        fetch(url)
+            .then(data => data.json())
+            .catch(err => {
+                console.log(err)
+            })
+            .then(data => {
+                    loaded = data;
+                    const result = loaded.filter(item => {
+                        return Number(item.productId) === Number(prodId);
+                    });
+                    if (result.length < 1) {
+                        failListener();
+                    } else {
+                        okListener(result);
+                    }
+                }
+            )
+
+
+    }
 
 }
 
