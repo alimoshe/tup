@@ -7,6 +7,8 @@ import $ from 'jquery';
 import ReactPaginate from "react-paginate";
 import MessageBoxComponent from "../../components/messageBox/messageBox";
 import FailureAlertComponent from "../../components/alert/failureAlert";
+import ModalComponent from "../../components/modal/modal";
+import FileUploadComponent from "../../components/file-upload/fileUpload";
 
 
 const API_BASE_URL = "http://localhost:3080";
@@ -337,7 +339,11 @@ const VendorComponent = () => {
 
                                 </div>
                             </div>
+                            <div className="row">
+                                <div className="col-lg-6">
 
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

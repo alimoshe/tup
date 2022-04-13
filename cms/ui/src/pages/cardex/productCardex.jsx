@@ -3,6 +3,10 @@ import FormToolbarComponent from "../../components/form-toolbar/formToolbar";
 import productApi from '../../api/product';
 import vendorApi from "../../api/vendor";
 import FailureAlertComponent from "../../components/alert/failureAlert";
+import ModalComponent from "../../components/modal/modal";
+import FileUploadComponent from "../../components/file-upload/fileUpload";
+import $ from "jquery";
+import axios from "axios";
 
 
 // Define States
@@ -164,6 +168,7 @@ const ProductProfile = ({formHeader, formType}) => {
     const [cloneVendor, setCloneVendor] = useState([]);
     const [picturePanelRender, setPicturePanelRender] = useState(false);
     const [vendorPanelRender, setVendorPanelRender] = useState(false);
+    const [imageNames, setImageNames] = useState([]);
     const refFilter = useRef('0');
     const vendorCode = useRef('');
 
@@ -233,6 +238,36 @@ const ProductProfile = ({formHeader, formType}) => {
         setRenderNewVendor(false);
         setRenderTable(true);
     }
+    const assignImageToProduct = (img) => {
+        axios.post(`${API_BASE_URL}/product/imgAssign`, {image: img, prodId: product[0].productId})
+            .then(res => {
+                console.log(res);
+            });
+    }
+    const sendImagesToApi = (images) => {
+
+        const frmData = new FormData();
+        this.removeAllProductImage();
+        images.map((image) => {
+
+            frmData.delete('file');
+            frmData.delete('productId');
+
+            frmData.append('file', image);
+            frmData.append('productId', product[0].productId);
+
+            axios.post(`${API_BASE_URL}/common/upload`, frmData).then(res => {
+                const localImageNames = [...imageNames];
+                localImageNames.push(res.data.imageName);
+                assignImageToProduct(res.data.imageName);
+                setImageNames(localImageNames);
+                $('.close').click();
+            })
+
+        });
+
+
+    }
 
     const load = (e) => {
 
@@ -242,7 +277,9 @@ const ProductProfile = ({formHeader, formType}) => {
         filterProduct(filter);
 
     }
-
+    const handleHideImagePanel = () => {
+        $('.close').click();
+    }
     return (
         <React.Fragment>
             <FormToolbarComponent formHeader={formHeader}/>
@@ -283,6 +320,10 @@ const ProductProfile = ({formHeader, formType}) => {
                                     <div className="card m-b-30">
                                         <div className="card-body">
                                             <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
+                                            <button type="button" style={{float:'left'}} className="btn btn-info waves-effect waves-light ml-2"
+                                                    data-toggle="modal"
+                                                    data-target=".bs-another-modal-center">آپلود عکس کالاها
+                                            </button>
                                             {
                                                 images.map((data, index) => (
                                                     <PicturesCard key={index}
@@ -329,6 +370,22 @@ const ProductProfile = ({formHeader, formType}) => {
                                 )
                             }
 
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-lg-6">
+                            <ModalComponent modalId="bs-another-modal-center"
+                                            modalTitle="آپلود عکس های کالا" >
+                                {
+                                    picturePanelRender && (
+                                        <FileUploadComponent toBeRender={true}
+                                                             currentProductId={product[0].productId}
+                                                             onHide={handleHideImagePanel}
+                                                             onPostToApi={(images) => sendImagesToApi(images)}
+                                                             editMode={false} />
+                                    )
+                                }
+                            </ModalComponent>
                         </div>
                     </div>
                 </div>
