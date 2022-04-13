@@ -20,10 +20,11 @@ const PicturesCard = ({imageName}) => {
 }
 
 
-const ProductVendors = ({vendors, render}) => {
+const ProductVendors = ({vendors, render, onSave, onRemove}) => {
 
     const onSaveChange = (e) => {
         e.preventDefault();
+        onSave();
     }
 
 
@@ -51,6 +52,7 @@ const ProductVendors = ({vendors, render}) => {
                                     <button className="btn btn-danger ml-1"
                                             data-tag={data.vendorId}
                                             data-toggle="modal"
+                                            onClick={onRemove}
                                             data-target=".bs-message-modal">حذف
                                     </button>
                                 </td>
@@ -177,9 +179,26 @@ const ProductProfile = ({formHeader, formType}) => {
         }
     }
 
+    const saveChanges = () => {
+
+    }
+
     const newVendorOk = (vendor) => {
-        setRenderNewVendor(false);
-        setRenderTable(true);
+
+        const filtered = cloneVendor.filter((item) => {
+            return Number(item.vendorId) === Number(vendor.vendorId)
+        });
+        console.log(filtered);
+        if(filtered.length < 1){
+            const copyVendors = [...cloneVendor];
+            copyVendors.push(vendor);
+            setCloneVendor(copyVendors);
+            setRenderNewVendor(false);
+            setRenderTable(true);
+        }
+
+
+
     }
 
     const loadImg = (filter) => {
@@ -200,6 +219,14 @@ const ProductProfile = ({formHeader, formType}) => {
     const onNewVendorClick = (e) => {
         setRenderNewVendor(true);
         setRenderTable(false);
+    }
+
+    const deleteVendor = (e) => {
+        const candidateToRemove = Number(e.target.attributes['data-tag'].value);
+        const removed = cloneVendor.filter((item) => {
+            return Number(item.vendorId) !== candidateToRemove;
+        })
+        setCloneVendor(removed);
     }
 
     const onCancelNewVendor = () => {
@@ -294,6 +321,8 @@ const ProductProfile = ({formHeader, formType}) => {
                                             />
                                             <ProductVendors vendors={cloneVendor}
                                                             render={renderTable}
+                                                            onRemove={deleteVendor}
+                                                            onSave={saveChanges}
                                             />
                                         </div>
                                     </div>
