@@ -20,7 +20,8 @@ async function createVendor(vendor){
 
 async function getVendorById(_vendorId){
     return vendorModel.findOne({
-        vendorId : _vendorId
+        vendorId : _vendorId,
+        visible  : true
     });
 }
 
