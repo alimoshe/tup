@@ -49,10 +49,12 @@ class FileUploadComponent extends Component {
             })})
     }
     postImageToApi = () => {
+
         this.props.onPostToApi(this.state.physicalFiles);
+        this.setState({selectedFiles : []})
 
     }
-showConfirmModal
+
     handleAddImage = (image) => {
         const clonedImages = [...this.state.images];
         clonedImages.push(image);
@@ -77,8 +79,8 @@ showConfirmModal
                     </thead>
                     <tbody>
                     {
-                        this.state.selectedFiles.map(data => (
-                            <tr >
+                        this.state.selectedFiles.map((data, index) => (
+                            <tr key={index}>
                                 <td>{data}</td>
                                 <td><a href=""
                                        onClick={this.removeFile}
@@ -90,9 +92,9 @@ showConfirmModal
                     </tbody>
                 </table>
                 {
-                    this.state.physicalFiles.map(file => (
+                    this.state.physicalFiles.map((file, index) => (
 
-                         <img className="mt-5" src={URL.createObjectURL(file)} alt="picture" style={{
+                         <img key={index} className="mt-5" src={URL.createObjectURL(file)} alt="picture" style={{
                              border:'1px',
                              width:'128px',
                              height:'128px'

@@ -150,7 +150,7 @@ class FormComponent extends Component {
     }
 
     removeAllProductImage = () => {
-        if (this.state.selectedImgProductId !== -1) {
+        if (Number(this.state.selectedImgProductId) !== -1 || Number(this.state.selectedImgProductId) !== 0) {
             this.state.products.map((data) => {
                 if (data.productId === this.state.selectedImgProductId) {
                     const requestOptions = {

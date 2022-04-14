@@ -76,6 +76,7 @@ productRouter.post('/ed', async (req, res)=>{
 })
 
 productRouter.post('/imgAssign', async (req, res)=>{
+    console.log(req.body);
     if(req.body.image && req.body.prodId) {
         try {
             await productModel.assignImage(req.body.image, req.body.prodId);

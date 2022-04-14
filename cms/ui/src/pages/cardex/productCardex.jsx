@@ -169,6 +169,7 @@ const ProductProfile = ({formHeader, formType}) => {
     const [picturePanelRender, setPicturePanelRender] = useState(false);
     const [vendorPanelRender, setVendorPanelRender] = useState(false);
     const [imageNames, setImageNames] = useState([]);
+    const [currentProduct, setCurrentProduct] = useState({});
     const refFilter = useRef('0');
     const vendorCode = useRef('');
 
@@ -176,7 +177,7 @@ const ProductProfile = ({formHeader, formType}) => {
         if (filter && filter > 0) {
             productApi.filterProduct(filter, (selected) => {
                 setProduct(selected);
-                console.log(selected[0].vendors);
+                setCurrentProduct(selected[0]);
                 setCloneVendor(selected[0].vendors);
                 setVendorPanelRender(true)
             });
@@ -194,14 +195,13 @@ const ProductProfile = ({formHeader, formType}) => {
             return Number(item.vendorId) === Number(vendor.vendorId)
         });
         console.log(filtered);
-        if(filtered.length < 1){
+        if (filtered.length < 1) {
             const copyVendors = [...cloneVendor];
             copyVendors.push(vendor);
             setCloneVendor(copyVendors);
             setRenderNewVendor(false);
             setRenderTable(true);
         }
-
 
 
     }
@@ -215,10 +215,10 @@ const ProductProfile = ({formHeader, formType}) => {
 
             },
             () => {
-            setShowFailMessage('');
-            setPicturePanelRender(false);
-            setVendorPanelRender(false);
-        });
+                setShowFailMessage('');
+                setPicturePanelRender(false);
+                setVendorPanelRender(false);
+            });
     }
 
     const onNewVendorClick = (e) => {
@@ -239,33 +239,55 @@ const ProductProfile = ({formHeader, formType}) => {
         setRenderTable(true);
     }
     const assignImageToProduct = (img) => {
-        axios.post(`${API_BASE_URL}/product/imgAssign`, {image: img, prodId: product[0].productId})
+        axios.post(`${API_BASE_URL}/product/imgAssign`, {image: img, prodId: currentProduct.productId})
             .then(res => {
+                const delta = res.data;
+                // TODO handle image send to api
+                console.log('assigning : ', delta);
+            });
+
+    }
+    const removeAllProductImage = () => {
+        if (Number(currentProduct) !== -1 || Number(currentProduct) !== 0) {
+            const requestOptions = {
+                method: 'POST',
+                body: currentProduct.productId
+            };
+
+            axios.post(`${API_BASE_URL}/common/picRemove`, requestOptions).then(res => {
                 console.log(res);
             });
+        }
     }
+
     const sendImagesToApi = (images) => {
 
         const frmData = new FormData();
-        this.removeAllProductImage();
+        removeAllProductImage();
+
+        let localImageNames = [];
         images.map((image) => {
+
+
 
             frmData.delete('file');
             frmData.delete('productId');
 
             frmData.append('file', image);
-            frmData.append('productId', product[0].productId);
+            frmData.append('productId', currentProduct.productId);
 
             axios.post(`${API_BASE_URL}/common/upload`, frmData).then(res => {
-                const localImageNames = [...imageNames];
-                localImageNames.push(res.data.imageName);
-                assignImageToProduct(res.data.imageName);
-                setImageNames(localImageNames);
-                $('.close').click();
-            })
-
+                if(res.statusText.toLowerCase() === 'ok') {
+                    localImageNames.push(res.data.imageName);
+                    assignImageToProduct(res.data.imageName);
+                }
+            });
         });
 
+        setImageNames(localImageNames);
+        const filter = Number(refFilter.current.value);
+        loadImg(filter);
+        $('.close').click();
 
     }
 
@@ -320,9 +342,16 @@ const ProductProfile = ({formHeader, formType}) => {
                                     <div className="card m-b-30">
                                         <div className="card-body">
                                             <h4 className="mt-0 header-title">عکس های مربوطه به کالا</h4>
-                                            <button type="button" style={{float:'left'}} className="btn btn-info waves-effect waves-light ml-2"
+                                            <button type="button" style={{float: 'left'}}
+                                                    className="btn btn-info waves-effect waves-light ml-2"
                                                     data-toggle="modal"
+
                                                     data-target=".bs-another-modal-center">آپلود عکس کالاها
+
+                                            </button>
+                                            <button type="button" style={{float: 'left'}}
+                                                    className="btn btn-info waves-effect waves-light ml-2"
+                                                    data-toggle="modal" >حذف عکس کالاها
                                             </button>
                                             {
                                                 images.map((data, index) => (
@@ -375,14 +404,14 @@ const ProductProfile = ({formHeader, formType}) => {
                     <div className="row">
                         <div className="col-lg-6">
                             <ModalComponent modalId="bs-another-modal-center"
-                                            modalTitle="آپلود عکس های کالا" >
+                                            modalTitle="آپلود عکس های کالا">
                                 {
                                     picturePanelRender && (
                                         <FileUploadComponent toBeRender={true}
-                                                             currentProductId={product[0].productId}
+                                                             currentProductId={currentProduct.productId}
                                                              onHide={handleHideImagePanel}
                                                              onPostToApi={(images) => sendImagesToApi(images)}
-                                                             editMode={false} />
+                                                             editMode={false}/>
                                     )
                                 }
                             </ModalComponent>
