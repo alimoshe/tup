@@ -5,6 +5,7 @@ import FormComponent from "../form/form.component";
 import { Route, Switch } from "react-router-dom";
 import VendorComponent from "../../pages/vendor-page/vendorComponent";
 import ProductProfile from "../../pages/cardex/productCardex";
+import GalleryPage from "../../pages/gallery/gallery.page";
 
 class MainPageComponent extends Component {
     render() {
@@ -30,6 +31,10 @@ class MainPageComponent extends Component {
                                         <ProductProfile formHeader=" کاردکس"
                                                         formType="کاردکس کلی کالا"
                                         />
+                                    </Route>
+                                    <Route path="/gallery">
+                                        <GalleryPage  formHeader="گالری تصاویر"
+                                                      formType="گالری تصاویر کالاها و خدمات" />
                                     </Route>
                                 </Switch>
 

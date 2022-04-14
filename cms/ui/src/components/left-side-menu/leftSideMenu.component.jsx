@@ -41,6 +41,13 @@ class LeftSideMenuComponent extends Component{
                                     <span> کاردکس کالا </span>
                                 </a>
                             </li>
+
+                            <li>
+                                <a href="/gallery" className="waves-effect">
+                                    <i className="dripicons-home" />
+                                    <span>گالری تصاویر</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div className="clearfix">
