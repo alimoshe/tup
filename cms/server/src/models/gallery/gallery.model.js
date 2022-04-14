@@ -8,6 +8,10 @@ const galleryModel = new mongoose.Schema({
         type:Number,
         required:true,
     },
+    typeId:{
+        type:Number,
+        required:true,
+    },
     title:{
         type:String,
         required:false,

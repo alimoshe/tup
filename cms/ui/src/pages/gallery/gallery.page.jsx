@@ -19,14 +19,6 @@ const GalleryPage = ({formHeader,formType}) => {
                                             data-toggle="modal"
                                             data-target=".bs-example-modal-center">کالای جدید
                                     </button>
-                                    <button type="button" className="btn btn-info waves-effect waves-light ml-2"
-                                            data-toggle="modal"
-                                            data-target=".bs-another-modal-center1">آپلود عکس کالاها
-                                    </button>
-                                    <button type="button" className="btn btn-info waves-effect waves-light ml-2"
-                                            data-toggle="modal"
-                                            data-target=".bs-message-modal">معرفی توضبحات
-                                    </button>
                                 </div>
                                 <div className="col-lg-2 pt-4">
                                     <input type="text" className="form-control"
