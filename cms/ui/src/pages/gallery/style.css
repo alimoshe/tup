@@ -1,0 +1,12 @@
+
+.image-container:hover{
+    opacity: 0.5;
+    border-radius: 15px !important;
+    cursor: pointer;
+}
+
+.delete-Button {
+    top:50%;
+    left:50%;
+    position:absolute;
+}
