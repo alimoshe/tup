@@ -73,5 +73,9 @@ commonRouter.get('/getImg/:id/:row', async (req, res)=>{
     return res.status(200).sendFile(path.join(__dirname, '..', '..', 'public', 'images', product.pictures[picRow]));
 })
 
+commonRouter.get('/get/:imageName', async (req, res)=>{
+    return res.status(200).sendFile(path.join(__dirname, '..', '..', 'public', 'images', req.params.imageName));
+})
+
 
 module.exports = commonRouter;

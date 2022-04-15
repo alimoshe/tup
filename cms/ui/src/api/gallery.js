@@ -28,13 +28,20 @@ const GalleryApi = {
 
     },
 
-    loadImages: async (filter) => {
-        const result = await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
-            .then(res => {
 
-                return res.data
+    loadImages: async (filter,imageLoadedFromApi) => {
+        return await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
+            .then(res => {
+                res.data.map((item) => {
+                    fetch(`${API_BASE_URL}/common/get/${item.blobName}`)
+                        .then(async (binaryImage) => {
+                            const imgBLOB = await binaryImage.blob();
+                            const imageObjectUrl = URL.createObjectURL(imgBLOB);
+                            imageLoadedFromApi(imageObjectUrl);
+                        })
+                })
             });
-        console.log(result);
+
     }
 }
 

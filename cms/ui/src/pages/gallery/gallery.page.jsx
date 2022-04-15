@@ -25,6 +25,7 @@ const GalleryPage = ({formHeader, formType}) => {
     const [category, setCategory] = useState([]);
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
+    const [searchButtonRender, setSearchButtonRender] =  useState(true);
     const categorySelected = useRef();
 
     const selectPicture = (e) => {
@@ -32,14 +33,14 @@ const GalleryPage = ({formHeader, formType}) => {
         $('.btnChoosePicture').click();
     }
 
-    useEffect(()=>{
+    useEffect( ()=>{
         setActivityGroups(masterData.activityGroups);
         setSuperCategory(filterSuperCategory(1));
         setCategory(filterCategory(1));
         setSuccessAddImage('none');
-        loadImagesFromDb().then(
+        setSearchButtonRender(true);
 
-        )
+        console.log(searchButtonRender);
     },[])
 
     const filterSuperCategory = (filter) => {
@@ -76,8 +77,16 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const loadImagesFromDb = async () => {
+        //setImages([]);
         const categoryFilter = Number(categorySelected.current.value);
-        return await GalleryApi.loadImages(categoryFilter);
+
+        return await GalleryApi.loadImages(categoryFilter,(currentFile)=>{
+            const currentPictureState = [...images];
+            currentPictureState.push(currentFile);
+            console.log(currentPictureState);
+            setImages(currentPictureState);
+        });
+
 
     }
 
@@ -95,6 +104,7 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const handleSuperCategoryChanged = (e) => {
+        setSearchButtonRender(true);
         const value = Number(e.target.value);
         setCategory(filterCategory(value));
 
@@ -166,6 +176,18 @@ const GalleryPage = ({formHeader, formType}) => {
                                                     }
                                                 </select>
                                             </div>
+
+                                        </div>
+                                        <div className="col-lg-1">
+                                            {
+                                                searchButtonRender && (
+                                                    <button type="button" className="btn btn-success waves-effect waves-light"
+                                                            data-toggle="modal"
+                                                            onClick={  loadImagesFromDb}
+                                                            data-target=".bs-example-modal-center"> جستجوی عکس ها
+                                                    </button>
+                                                )
+                                            }
 
                                         </div>
                                     </div>

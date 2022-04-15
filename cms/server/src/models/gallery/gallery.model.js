@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const buffer = require("buffer");
 const galleryModel = new mongoose.Schema({
     itemId:{
         type: Number,
@@ -38,6 +39,9 @@ const galleryModel = new mongoose.Schema({
         type:Boolean,
         required:false,
         default : true,
+    },
+    blobData :{
+        type:Buffer
     }
 })
 
