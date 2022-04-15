@@ -17,18 +17,14 @@ const superCategoryModel = [
     },
     {
         id : 5,
-        title : 'خدمات'
-    },
-    {
-        id : 6,
         title : 'وسایل شخصی'
     },
     {
-        id : 7,
+        id : 6,
         title : 'سرگرمی و فراغت'
     },
     {
-        id : 8,
+        id : 7,
         title : 'اجتماعی'
     },
     {

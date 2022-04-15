@@ -10,7 +10,7 @@ const galleryModel = new mongoose.Schema({
     },
     typeId:{
         type:Number,
-        required:true,
+        required:false,
     },
     title:{
         type:String,

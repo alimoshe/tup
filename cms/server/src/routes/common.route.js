@@ -3,7 +3,6 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const productModel = require('../models/product/product.mongo');
-const {contentDisposition} = require("express/lib/utils");
 const commonRouter = express.Router();
 var imgName = '';
 const storage = multer.diskStorage({

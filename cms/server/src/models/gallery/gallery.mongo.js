@@ -8,7 +8,12 @@ async function getAllGalleryData(){
 async function galleryItemCreate(gItem){
     return galleryModel.create(gItem);
 }
+
+async function getGalleryCountItems() {
+    return galleryModel.count({visible : true});
+}
 module.exports = {
     getAllGalleryData,
     galleryItemCreate,
+    getGalleryCountItems,
 }

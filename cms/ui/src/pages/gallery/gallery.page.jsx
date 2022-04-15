@@ -1,15 +1,19 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import FormToolbarComponent from "../../components/form-toolbar/formToolbar";
 import './style.css';
 import $ from 'jquery';
-
+import masterData from "../../api/masterData";
+import GalleryApi from "../../api/gallery";
+import SuccessAlertComponent from "../../components/alert/successAlert";
 const ImageContainer = ({image}) => {
     return (
         <React.Fragment>
-            <a className="image-popup-no-margins" data-toggle="modal" data-target="remove-elem">
-                <img className="img-fluid d-block image-container" src={image}
-                     alt="" width="200" height="200"/>
-            </a>
+
+                <a className="ml-3 img-thumbnail" style={{display:'inline-block'}} data-toggle="modal" data-target="remove-elem">
+                    <img className="img-fluid d-block image-container" src={image}
+                         alt="" width="200" height="200"/>
+                </a>
+
         </React.Fragment>
     )
 }
@@ -17,20 +21,78 @@ const ImageContainer = ({image}) => {
 const GalleryPage = ({formHeader, formType}) => {
 
     const [images, setImages] = useState([]);
-    const [singleImage, setSingleImage] = useState('');
+    const [superCategory, setSuperCategory] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [activityGroups, setActivityGroups] = useState([]);
+    const [successAddImage, setSuccessAddImage] = useState('none');
+    const categorySelected = useRef();
+
     const selectPicture = (e) => {
         e.preventDefault();
         $('.btnChoosePicture').click();
     }
 
-    const handleSelectedFile = (e) => {
-        console.log(e.target.files[0]);
-        const imgUrl = URL.createObjectURL(e.target.files[0]);
-        setSingleImage(imgUrl);
+    useEffect(()=>{
+        setActivityGroups(masterData.activityGroups);
+        setSuperCategory(filterSuperCategory(1));
+        setCategory(filterCategory(1));
+        setSuccessAddImage('none');
+    },[])
+
+    const filterSuperCategory = (filter) => {
+        return masterData.superCategory.filter((item) => {
+            return item.activityGroupId === filter;
+        });
     }
 
-    const searchBox = useRef();
+    const filterCategory = (filter) =>{
+        return masterData.category.filter((item) => {
+            return item.superCategoryId === filter;
+        });
+    }
 
+    const addImageToGallery = (postImageResult) => {
+        const galleryItem = {
+            itemId : -1,
+            sectionId : Number(categorySelected.current.value),
+            title : '',
+            path : '',
+            blobName : postImageResult.data.imageName,
+        }
+        GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
+
+        })
+    }
+
+    const handleSelectedFile = (e) => {
+
+        const imgUrl = URL.createObjectURL(e.target.files[0]);
+        const clonedImage = [...images];
+        clonedImage.push(imgUrl);
+        setImages(clonedImage);
+        GalleryApi.sendImagesToApi(e.target.files[0],(imageName) => addImageToGallery(imageName));
+
+    }
+
+    const handleActivityChanged = (e) => {
+        const value = Number(e.target.value);
+        const filtered = filterSuperCategory(value);
+        if(filtered.length < 1){
+            setCategory([]);
+            setSuperCategory(filtered);
+        }else {
+            setSuperCategory(filtered);
+            setCategory(filterCategory(1));
+        }
+
+    }
+
+    const handleSuperCategoryChanged = (e) => {
+        const value = Number(e.target.value);
+        setCategory(filterCategory(value));
+
+
+    }
     return (
         <React.Fragment>
             <FormToolbarComponent formHeader={formHeader}/>
@@ -39,13 +101,67 @@ const GalleryPage = ({formHeader, formType}) => {
                     <div className="card m-b-30">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-lg-10">
+                                <div className="col-lg-10" style={{display:'inline-block'}}>
                                     <h4 className="mt-0 header-title">{formType}</h4>
-                                    <button type="button" className="btn btn-success waves-effect waves-light"
-                                            data-toggle="modal"
-                                            onClick={selectPicture}
-                                            data-target=".bs-example-modal-center">تصویر جدید
-                                    </button>
+                                    <SuccessAlertComponent show={successAddImage}
+                                                           message="تصویر موردنظر در پایگاه داده ذخیره شد"
+                                    />
+                                    <div className="row">
+                                        <div className="col-lg-1">
+                                            <button type="button" className="btn btn-success waves-effect waves-light"
+                                                    data-toggle="modal"
+                                                    onClick={selectPicture}
+                                                    data-target=".bs-example-modal-center">تصویر جدید
+                                            </button>
+                                        </div>
+                                        <div className="col-lg-1">
+                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}>گروه فعالیتی</label>
+                                        </div>
+                                        <div className="col-lg-2">
+                                            <div className="form-group m-t-10">
+                                                <select className="form-control" onChange={handleActivityChanged} >
+                                                    {
+                                                        masterData.activityGroups.map((data, index)=> (
+                                                            <option key={data.id}
+                                                                    value={data.id}>{data.title}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="col-lg-1">
+                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}> گروه تصاویر</label>
+                                        </div>
+                                        <div className="col-lg-2">
+                                            <div className="form-group m-t-10">
+                                                <select className="form-control" onChange={handleSuperCategoryChanged}>
+                                                    {
+                                                        superCategory.map((data, index)=> (
+                                                            <option key={data.id}
+                                                                    value={data.id}>{data.title}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div className="col-lg-1">
+                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}> زیر گروه </label>
+                                        </div>
+                                        <div className="col-lg-2">
+                                            <div className="form-group m-t-10">
+                                                <select ref={categorySelected} className="form-control" >
+                                                    {
+                                                        category.map((data, index)=> (
+                                                            <option key={index}
+                                                                    value={data.id}>{data.title}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                     <input className="input-group btnChoosePicture"
                                            accept=".gif,.jpg,.jpeg,.png"
                                            id="btnChoosePicture"
@@ -54,7 +170,17 @@ const GalleryPage = ({formHeader, formType}) => {
                                 </div>
                             </div>
                             <hr/>
-                            <ImageContainer image={singleImage}/>
+                            <div className="row">
+                                <div className="col-lg-12"  >
+                                    {
+
+                                        images.map((url, index) => (
+
+                                            <ImageContainer key={index} image={url}/>
+                                        ))
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
