@@ -37,6 +37,9 @@ const GalleryPage = ({formHeader, formType}) => {
         setSuperCategory(filterSuperCategory(1));
         setCategory(filterCategory(1));
         setSuccessAddImage('none');
+        loadImagesFromDb().then(
+
+        )
     },[])
 
     const filterSuperCategory = (filter) => {
@@ -51,26 +54,30 @@ const GalleryPage = ({formHeader, formType}) => {
         });
     }
 
-    const addImageToGallery = (postImageResult) => {
+    const addImageToGallery = async (postImageResult) => {
         const galleryItem = {
-            itemId : -1,
+            itemId : await GalleryApi.getGalleryLen() + 1,
             sectionId : Number(categorySelected.current.value),
             title : '',
-            path : '',
+            typeId:-1,
+            isMain:false,
+            picturePath : '',
+            expireDate:null,
+            visible:true,
             blobName : postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
-
+            console.log(res);
         })
     }
 
     const handleSelectedFile = (e) => {
-
-        const imgUrl = URL.createObjectURL(e.target.files[0]);
-        const clonedImage = [...images];
-        clonedImage.push(imgUrl);
-        setImages(clonedImage);
         GalleryApi.sendImagesToApi(e.target.files[0],(imageName) => addImageToGallery(imageName));
+    }
+
+    const loadImagesFromDb = async () => {
+        const categoryFilter = Number(categorySelected.current.value);
+        return await GalleryApi.loadImages(categoryFilter);
 
     }
 

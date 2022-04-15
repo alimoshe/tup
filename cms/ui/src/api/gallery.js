@@ -13,22 +13,28 @@ const GalleryApi = {
     },
 
     assignItemIdAndSend: (galleryItem, processResultCallback) => {
-        const extractLength = (len) => {
-            galleryItem.itemId = len + 1;
-            axios.post(`${API_BASE_URL}/gallery/`, {galleryItem})
-                .then((result) => {
-                    processResultCallback(result);
-                })
-        };
-        axios.get(`${API_BASE_URL}/gallery/count`)
+
+        axios.post(`${API_BASE_URL}/gallery/`, galleryItem)
+            .then(res => console.log(res));
+    },
+
+    getGalleryLen: async () => {
+        let length;
+        return axios.get(`${API_BASE_URL}/gallery/`)
             .then(res => {
-                if(res.statusText.toLowerCase() === 'ok'){
-                    if(res.data.length !== null)
-                        extractLength(res.data.length);
-                    extractLength(0);
-                }
+                length = res.data.length;
+                return length
             });
 
+    },
+
+    loadImages: async (filter) => {
+        const result = await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
+            .then(res => {
+
+                return res.data
+            });
+        console.log(result);
     }
 }
 

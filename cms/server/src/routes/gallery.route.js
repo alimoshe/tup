@@ -4,15 +4,20 @@ const galleryModel = require('../models/gallery/gallery.mongo');
 
 
 galleryRouter.get('/', async (req, res)=>{
-    res.status(200).send(galleryModel.getAllGalleryData());
-})
+    return res.status(200).send(await galleryModel.getAllGalleryData());
+});
 
 galleryRouter.get('/count', async (req, res)=>{
-    res.status(200).send(galleryModel.getGalleryCountItems());
-})
+    return res.status(200).send(await galleryModel.getGalleryCountItems());
+});
 
 galleryRouter.post('/', async (req, res) => {
-    console.log(req.body);
-    res.status(200).send(galleryModel.galleryItemCreate(req.body));
-})
+
+    return res.status(200).send(await galleryModel.galleryItemCreate(req.body));
+});
+
+galleryRouter.get('/sec/:sectionId', async (req, res)=>{
+    console.log(req.params.sectionId);
+    return res.status(200).send(await galleryModel.getGalleryItemsBySectionId(req.params.sectionId));
+});
 module.exports = galleryRouter;

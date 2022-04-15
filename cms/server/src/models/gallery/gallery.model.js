@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const galleryModel = new mongoose.Schema({
     itemId:{
         type: Number,
-        required:true,
+        required:false,
     },
     sectionId:{
         type:Number,
-        required:true,
+        required:false,
     },
     typeId:{
         type:Number,
@@ -16,14 +16,14 @@ const galleryModel = new mongoose.Schema({
         type:String,
         required:false,
     },
-    path:{
+    picturePath:{
        type:String,
        required:false,
        default:''
     },
     blobName:{
         type:String,
-        required:true,
+        required:false,
     },
     isMain:{
         type:Boolean,
@@ -41,4 +41,4 @@ const galleryModel = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Gallery', galleryModel);
+module.exports = new mongoose.model('Gallery', galleryModel);
