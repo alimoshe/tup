@@ -16,9 +16,17 @@ async function getGalleryCountItems() {
 
 async function getGalleryItemsBySectionId(sectionId) {
     return galleryModel.find({
-        visible:true,
-        sectionId : sectionId
+        visible: true,
+        sectionId: sectionId
     })
+}
+
+
+async function updateGallery(itemId, picture) {
+    return galleryModel.updateOne({
+        visible: true,
+        itemId: itemId
+    }, {blobData: picture});
 }
 
 module.exports = {
@@ -26,5 +34,6 @@ module.exports = {
     galleryItemCreate,
     getGalleryCountItems,
     getGalleryItemsBySectionId,
+    updateGallery,
 }
 

@@ -65,6 +65,7 @@ const GalleryPage = ({formHeader, formType}) => {
             picturePath : '',
             expireDate:null,
             visible:true,
+
             blobName : postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
@@ -110,6 +111,8 @@ const GalleryPage = ({formHeader, formType}) => {
 
 
     }
+
+
     return (
         <React.Fragment>
             <FormToolbarComponent formHeader={formHeader}/>

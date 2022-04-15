@@ -3,6 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const productModel = require('../models/product/product.mongo');
+const galleryModel = require('../models/gallery/gallery.mongo');
 const commonRouter = express.Router();
 var imgName = '';
 const storage = multer.diskStorage({
@@ -62,6 +63,15 @@ commonRouter.post('/picRemove', async (req, res) => {
 commonRouter.post('/getImg', (req, res)=>{
     const imageName = req.body.imageName;
     const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', imageName);
+    return res.status(200).send({ok: true, path : absolutePath});
+})
+
+commonRouter.post('/postImg', async (req, res)=>{
+
+
+    const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', '1650044115331category-13.jpg');
+    const fileContent = fs.readFileSync(absolutePath);
+    await galleryModel.updateGallery(1,fileContent);
     return res.status(200).send({ok: true, path : absolutePath});
 })
 
