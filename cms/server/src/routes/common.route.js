@@ -66,12 +66,13 @@ commonRouter.post('/getImg', (req, res)=>{
     return res.status(200).send({ok: true, path : absolutePath});
 })
 
-commonRouter.post('/postImg', async (req, res)=>{
+commonRouter.post('/updateImg/:imageName/:galleryItem', async (req, res)=>{
 
-
-    const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', '1650044115331category-13.jpg');
+    const imageName = req.params.imageName;
+    const galleryItem = Number(req.params.galleryItem);
+    const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', imageName);
     const fileContent = fs.readFileSync(absolutePath);
-    await galleryModel.updateGallery(1,fileContent);
+    await galleryModel.updateGallery(galleryItem,fileContent);
     return res.status(200).send({ok: true, path : absolutePath});
 })
 

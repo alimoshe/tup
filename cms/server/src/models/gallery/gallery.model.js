@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const buffer = require("buffer");
+
 const galleryModel = new mongoose.Schema({
     itemId:{
         type: Number,

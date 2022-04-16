@@ -12,8 +12,8 @@ galleryRouter.get('/count', async (req, res)=>{
 });
 
 galleryRouter.post('/', async (req, res) => {
-
-    return res.status(200).send(await galleryModel.galleryItemCreate(req.body));
+    await galleryModel.galleryItemCreate(req.body)
+    return res.status(200).json(req.body);
 });
 
 galleryRouter.get('/sec/:sectionId', async (req, res)=>{

@@ -26,11 +26,14 @@ const GalleryPage = ({formHeader, formType}) => {
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
     const [searchButtonRender, setSearchButtonRender] =  useState(true);
+    const [currentSelectedBLOB, setCurrentSelectedBLOB] = useState();
+    const [singleImageTest, setSingleImageTest] = useState('');
     const categorySelected = useRef();
 
     const selectPicture = (e) => {
         e.preventDefault();
         $('.btnChoosePicture').click();
+
     }
 
     useEffect( ()=>{
@@ -65,7 +68,6 @@ const GalleryPage = ({formHeader, formType}) => {
             picturePath : '',
             expireDate:null,
             visible:true,
-
             blobName : postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
