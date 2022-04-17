@@ -13,12 +13,10 @@ const GalleryApi = {
     },
 
     assignItemIdAndSend: (galleryItem, processResultCallback) => {
-
         axios.post(`${API_BASE_URL}/gallery/`, galleryItem)
             .then(res => {
-                axios.post(`${API_BASE_URL}/common/updateImg/${res.data.blobName}/${res.data.itemId}`).then( res => {
-                    console.log(res);
-                });
+               const result = res;
+               processResultCallback(`${API_BASE_URL}/common/${galleryItem.itemId}`);
             });
     },
 

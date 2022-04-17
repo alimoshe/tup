@@ -66,6 +66,14 @@ commonRouter.post('/getImg', (req, res)=>{
     return res.status(200).send({ok: true, path : absolutePath});
 })
 
+commonRouter.get('/getImg/:id', async (req, res)=>{
+    const itemId = Number(req.params.id);
+    const result = await galleryModel.getBlobName(itemId);
+    const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', result.blobName);
+
+    return res.status(200).sendFile(absolutePath);
+})
+
 commonRouter.post('/updateImg/:imageName/:galleryItem', async (req, res)=>{
 
     const imageName = req.params.imageName;

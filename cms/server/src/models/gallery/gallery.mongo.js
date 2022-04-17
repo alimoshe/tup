@@ -3,13 +3,13 @@ const galleryModel = require('./gallery.model');
 async function getAllGalleryData() {
     return galleryModel.find({
         visible: true
-    },{blobData: 0})
+    }, {blobData: 0})
 }
 
 async function getAllGalleryBLOB() {
     return galleryModel.find({
         visible: true
-    },{blobData: 0})
+    }, {blobData: 0})
 }
 
 async function galleryItemCreate(gItem) {
@@ -28,10 +28,22 @@ async function getGalleryItemsBySectionId(sectionId) {
 }
 
 async function getGalleryItemBlobData(itemId) {
-    return galleryModel.find({
-        itemId : itemId,
-        visible:true
-    },{blobData : 1})
+    return galleryModel.findOne({
+        itemId: itemId,
+        visible: true
+    }, {
+        _id: 0,
+        __v: 0,
+        itemId: 0,
+        sectionId: 0,
+        typeId:0,
+        title: 0,
+        picturePath: 0,
+        blobName: 0,
+        isMain: 0,
+        expireDate: 0,
+        visible: 0
+    })
 }
 
 async function updateGallery(itemId, picture) {
@@ -41,12 +53,21 @@ async function updateGallery(itemId, picture) {
     }, {blobData: picture});
 }
 
+async function getBlobName(itemId) {
+    return galleryModel.findOne({
+        visible: true,
+        itemId: itemId
+    }, {blobName : 1});
+}
+
+
 module.exports = {
     getAllGalleryData,
     galleryItemCreate,
     getGalleryCountItems,
     getGalleryItemsBySectionId,
     getGalleryItemBlobData,
+    getBlobName,
     updateGallery,
 }
 

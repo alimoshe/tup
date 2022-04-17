@@ -42,8 +42,6 @@ const GalleryPage = ({formHeader, formType}) => {
         setCategory(filterCategory(1));
         setSuccessAddImage('none');
         setSearchButtonRender(true);
-
-        console.log(searchButtonRender);
     },[])
 
     const filterSuperCategory = (filter) => {
