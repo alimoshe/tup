@@ -15,8 +15,8 @@ const GalleryApi = {
     assignItemIdAndSend: (galleryItem, processResultCallback) => {
         axios.post(`${API_BASE_URL}/gallery/`, galleryItem)
             .then(res => {
-               const result = res;
-               processResultCallback(`${API_BASE_URL}/common/${galleryItem.itemId}`);
+                const result = res;
+                processResultCallback(`${API_BASE_URL}/common/${galleryItem.itemId}`);
             });
     },
 
@@ -31,17 +31,10 @@ const GalleryApi = {
     },
 
 
-    loadImages: async (filter,imageLoadedFromApi) => {
-        return await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
+    loadImages: async (filter, imageLoadedFromApi) => {
+        await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
             .then(res => {
-                res.data.map((item) => {
-                    fetch(`${API_BASE_URL}/common/get/${item.blobName}`)
-                        .then(async (binaryImage) => {
-                            const imgBLOB = await binaryImage.blob();
-                            const imageObjectUrl = URL.createObjectURL(imgBLOB);
-                            imageLoadedFromApi(imageObjectUrl);
-                        })
-                })
+                imageLoadedFromApi(res.data);
             });
 
     }

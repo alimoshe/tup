@@ -5,12 +5,14 @@ import $ from 'jquery';
 import masterData from "../../api/masterData";
 import GalleryApi from "../../api/gallery";
 import SuccessAlertComponent from "../../components/alert/successAlert";
+const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
+
 const ImageContainer = ({image}) => {
     return (
         <React.Fragment>
 
                 <a className="ml-3 img-thumbnail" style={{display:'inline-block'}} data-toggle="modal" data-target="remove-elem">
-                    <img className="img-fluid d-block image-container" src={image}
+                    <img className="img-fluid d-block image-container" src={IMAGE_API_URL + '/' + image}
                          alt="" width="200" height="200"/>
                 </a>
 
@@ -26,6 +28,7 @@ const GalleryPage = ({formHeader, formType}) => {
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
     const [searchButtonRender, setSearchButtonRender] =  useState(true);
+    const [currentCategory, setCurrentCategory] = useState(1);
     const categorySelected = useRef();
 
     const selectPicture = (e) => {
@@ -67,7 +70,7 @@ const GalleryPage = ({formHeader, formType}) => {
             blobName : postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
-            console.log(res);
+
         })
     }
 
@@ -76,15 +79,20 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const loadImagesFromDb = async () => {
-        //setImages([]);
+
         const categoryFilter = Number(categorySelected.current.value);
 
-        return await GalleryApi.loadImages(categoryFilter,(currentFile)=>{
-            const currentPictureState = [...images];
-            currentPictureState.push(currentFile);
-            console.log(currentPictureState);
-            setImages(currentPictureState);
+        await GalleryApi.loadImages(categoryFilter,(currentFile)=>{
+            let imageArr = [...images];
+            currentFile.map((element) => {
+                imageArr.push(element.itemId);
+            })
+            setImages(imageArr)
+            console.log(images);
         });
+
+
+
 
 
     }
@@ -110,6 +118,9 @@ const GalleryPage = ({formHeader, formType}) => {
 
     }
 
+    const handleCategoryChange = (e)=>{
+        console.log(e.target.value);
+    }
 
     return (
         <React.Fragment>
@@ -168,7 +179,7 @@ const GalleryPage = ({formHeader, formType}) => {
                                         </div>
                                         <div className="col-lg-2">
                                             <div className="form-group m-t-10">
-                                                <select ref={categorySelected} className="form-control" >
+                                                <select ref={categorySelected} className="form-control"  onChange={handleCategoryChange}>
                                                     {
                                                         category.map((data, index)=> (
                                                             <option key={index}
@@ -191,6 +202,18 @@ const GalleryPage = ({formHeader, formType}) => {
                                             }
 
                                         </div>
+                                        <div className="col-lg-1">
+                                            {
+                                                searchButtonRender && (
+                                                    <button type="button" className="btn btn-danger waves-effect waves-light"
+                                                            data-toggle="modal"
+
+                                                            data-target=".bs-example-modal-center">انصراف
+                                                    </button>
+                                                )
+                                            }
+
+                                        </div>
                                     </div>
                                     <input className="input-group btnChoosePicture"
                                            accept=".gif,.jpg,.jpeg,.png"
@@ -201,7 +224,7 @@ const GalleryPage = ({formHeader, formType}) => {
                             </div>
                             <hr/>
                             <div className="row">
-                                <div className="col-lg-12"  >
+                                <div className="col-lg-12" style={{display:images.length > 0 ? '' : 'none'}}  >
                                     {
 
                                         images.map((url, index) => (

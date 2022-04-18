@@ -24,7 +24,18 @@ async function getGalleryItemsBySectionId(sectionId) {
     return galleryModel.find({
         visible: true,
         sectionId: sectionId
-    })
+    },{
+        _id: 0,
+        __v: 0,
+        blobName: 0,
+        sectionId: 0,
+        typeId:0,
+        title: 0,
+        picturePath: 0,
+        blobData: 0,
+        isMain: 0,
+        expireDate: 0,
+        visible: 0})
 }
 
 async function getGalleryItemBlobData(itemId) {
@@ -53,10 +64,10 @@ async function updateGallery(itemId, picture) {
     }, {blobData: picture});
 }
 
-async function getBlobName(itemId) {
+async function getBlobName(refId) {
     return galleryModel.findOne({
         visible: true,
-        itemId: itemId
+        itemId: refId
     }, {blobName : 1});
 }
 
