@@ -5,14 +5,21 @@ import $ from 'jquery';
 import masterData from "../../api/masterData";
 import GalleryApi from "../../api/gallery";
 import SuccessAlertComponent from "../../components/alert/successAlert";
+import ModalComponent from "../../components/modal/modal";
 
 const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
 
-const ImageContainer = ({image}) => {
+
+
+const ImageContainer = ({image, selectImage}) => {
+    const selectPicture = (e) => {
+        e.preventDefault();
+        selectImage(e);
+    }
     return (
         <React.Fragment>
 
-            <a className="ml-3 img-thumbnail" style={{display: 'inline-block'}} data-toggle="modal"
+            <a className="ml-3 img-thumbnail" onClick={selectPicture} style={{display: 'inline-block'}}
                data-target="remove-elem">
                 <img className="img-fluid d-block image-container" src={IMAGE_API_URL + '/' + image}
                      alt="" width="200" height="200"/>
@@ -31,6 +38,7 @@ const GalleryPage = ({formHeader, formType}) => {
     const [successAddImage, setSuccessAddImage] = useState('none');
     const [searchButtonRender, setSearchButtonRender] = useState(true);
     const [currentCategory, setCurrentCategory] = useState(1);
+    const [currentPictureSelected, setCurrentPictureSelected] = useState('');
     const categorySelected = useRef();
 
     const selectPicture = (e) => {
@@ -123,8 +131,11 @@ const GalleryPage = ({formHeader, formType}) => {
         setSearchButtonRender(true);
         const value = Number(e.target.value);
         setCategory(filterCategory(value));
+    }
 
+    const handleSelectImage = (e) => {
 
+        console.log(e.target.attributes['src'].value);
     }
 
     const handleCategoryChange = (e) => {
@@ -209,8 +220,7 @@ const GalleryPage = ({formHeader, formType}) => {
                                                     <button type="button"
                                                             className="btn btn-success waves-effect waves-light"
                                                             data-toggle="modal"
-                                                            onClick={loadImagesFromDb}
-                                                            data-target=".bs-example-modal-center"> جستجوی عکس ها
+                                                            onClick={loadImagesFromDb}> جستجوی عکس ها
                                                     </button>
                                                 )
                                             }
@@ -247,6 +257,14 @@ const GalleryPage = ({formHeader, formType}) => {
                                             <ImageContainer key={index} image={url}/>
                                         ))
                                     }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg-6">
+                                    <ModalComponent modalId="bs-example-modal-center"
+                                                    modalTitle={"معرفی کالا"}>
+                                        <ImageContainer image={currentPictureSelected} selectImage={handleSelectImage} />
+                                    </ModalComponent>
                                 </div>
                             </div>
                         </div>
