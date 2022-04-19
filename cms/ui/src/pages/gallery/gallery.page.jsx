@@ -80,12 +80,12 @@ const GalleryPage = ({formHeader, formType}) => {
         GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
     }
 
-    const loadImagesFromDb =  () => {
+    const loadImagesFromDb = () => {
 
         const categoryFilter = Number(categorySelected.current.value);
 
         GalleryApi.loadImages(categoryFilter, (currentFile) => {
-            let imageArr = [...images];
+            let imageArr = [];
             let found = false;
             currentFile.map((element) => {
                 found = true;
@@ -93,18 +93,15 @@ const GalleryPage = ({formHeader, formType}) => {
                     return Number(byValue) === Number(element.itemId)
                 });
 
-                if(filtered.length < 1){
+                if (filtered.length < 1) {
                     imageArr.push(element.itemId);
-
                 }
+            });
+            setImages(imageArr);
 
-            })
-            if(!found){
-                $('img-thumbnail').detach();
-                console.log(found);
-            }
 
-            setImages(imageArr)
+            console.log(images);
+
         });
 
     }
