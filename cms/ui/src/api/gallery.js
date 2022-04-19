@@ -31,8 +31,8 @@ const GalleryApi = {
     },
 
 
-    loadImages: async (filter, imageLoadedFromApi) => {
-        await axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
+    loadImages:  (filter, imageLoadedFromApi) => {
+         axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
             .then(res => {
                 imageLoadedFromApi(res.data);
             });

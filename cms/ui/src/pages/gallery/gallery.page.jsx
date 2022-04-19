@@ -5,16 +5,18 @@ import $ from 'jquery';
 import masterData from "../../api/masterData";
 import GalleryApi from "../../api/gallery";
 import SuccessAlertComponent from "../../components/alert/successAlert";
+
 const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
 
 const ImageContainer = ({image}) => {
     return (
         <React.Fragment>
 
-                <a className="ml-3 img-thumbnail" style={{display:'inline-block'}} data-toggle="modal" data-target="remove-elem">
-                    <img className="img-fluid d-block image-container" src={IMAGE_API_URL + '/' + image}
-                         alt="" width="200" height="200"/>
-                </a>
+            <a className="ml-3 img-thumbnail" style={{display: 'inline-block'}} data-toggle="modal"
+               data-target="remove-elem">
+                <img className="img-fluid d-block image-container" src={IMAGE_API_URL + '/' + image}
+                     alt="" width="200" height="200"/>
+            </a>
 
         </React.Fragment>
     )
@@ -27,7 +29,7 @@ const GalleryPage = ({formHeader, formType}) => {
     const [category, setCategory] = useState([]);
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
-    const [searchButtonRender, setSearchButtonRender] =  useState(true);
+    const [searchButtonRender, setSearchButtonRender] = useState(true);
     const [currentCategory, setCurrentCategory] = useState(1);
     const categorySelected = useRef();
 
@@ -37,13 +39,13 @@ const GalleryPage = ({formHeader, formType}) => {
 
     }
 
-    useEffect( ()=>{
+    useEffect(() => {
         setActivityGroups(masterData.activityGroups);
         setSuperCategory(filterSuperCategory(1));
         setCategory(filterCategory(1));
         setSuccessAddImage('none');
         setSearchButtonRender(true);
-    },[])
+    }, [])
 
     const filterSuperCategory = (filter) => {
         return masterData.superCategory.filter((item) => {
@@ -51,7 +53,7 @@ const GalleryPage = ({formHeader, formType}) => {
         });
     }
 
-    const filterCategory = (filter) =>{
+    const filterCategory = (filter) => {
         return masterData.category.filter((item) => {
             return item.superCategoryId === filter;
         });
@@ -59,15 +61,15 @@ const GalleryPage = ({formHeader, formType}) => {
 
     const addImageToGallery = async (postImageResult) => {
         const galleryItem = {
-            itemId : await GalleryApi.getGalleryLen() + 1,
-            sectionId : Number(categorySelected.current.value),
-            title : '',
-            typeId:-1,
-            isMain:false,
-            picturePath : '',
-            expireDate:null,
-            visible:true,
-            blobName : postImageResult.data.imageName,
+            itemId: await GalleryApi.getGalleryLen() + 1,
+            sectionId: Number(categorySelected.current.value),
+            title: '',
+            typeId: -1,
+            isMain: false,
+            picturePath: '',
+            expireDate: null,
+            visible: true,
+            blobName: postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
 
@@ -75,35 +77,45 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const handleSelectedFile = (e) => {
-        GalleryApi.sendImagesToApi(e.target.files[0],(imageName) => addImageToGallery(imageName));
+        GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
     }
 
-    const loadImagesFromDb = async () => {
+    const loadImagesFromDb =  () => {
 
         const categoryFilter = Number(categorySelected.current.value);
 
-        await GalleryApi.loadImages(categoryFilter,(currentFile)=>{
+        GalleryApi.loadImages(categoryFilter, (currentFile) => {
             let imageArr = [...images];
+            let found = false;
             currentFile.map((element) => {
-                imageArr.push(element.itemId);
+                found = true;
+                const filtered = imageArr.filter((byValue) => {
+                    return Number(byValue) === Number(element.itemId)
+                });
+
+                if(filtered.length < 1){
+                    imageArr.push(element.itemId);
+
+                }
+
             })
+            if(!found){
+                $('img-thumbnail').detach();
+                console.log(found);
+            }
+
             setImages(imageArr)
-            console.log(images);
         });
-
-
-
-
 
     }
 
     const handleActivityChanged = (e) => {
         const value = Number(e.target.value);
         const filtered = filterSuperCategory(value);
-        if(filtered.length < 1){
+        if (filtered.length < 1) {
             setCategory([]);
             setSuperCategory(filtered);
-        }else {
+        } else {
             setSuperCategory(filtered);
             setCategory(filterCategory(1));
         }
@@ -118,7 +130,7 @@ const GalleryPage = ({formHeader, formType}) => {
 
     }
 
-    const handleCategoryChange = (e)=>{
+    const handleCategoryChange = (e) => {
         console.log(e.target.value);
     }
 
@@ -130,7 +142,7 @@ const GalleryPage = ({formHeader, formType}) => {
                     <div className="card m-b-30">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-lg-10" style={{display:'inline-block'}}>
+                                <div className="col-lg-10" style={{display: 'inline-block'}}>
                                     <h4 className="mt-0 header-title">{formType}</h4>
                                     <SuccessAlertComponent show={successAddImage}
                                                            message="تصویر موردنظر در پایگاه داده ذخیره شد"
@@ -144,13 +156,14 @@ const GalleryPage = ({formHeader, formType}) => {
                                             </button>
                                         </div>
                                         <div className="col-lg-1">
-                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}>گروه فعالیتی</label>
+                                            <label className="mt-3" style={{float: 'left', textAlign: 'center'}}>گروه
+                                                فعالیتی</label>
                                         </div>
                                         <div className="col-lg-2">
                                             <div className="form-group m-t-10">
-                                                <select className="form-control" onChange={handleActivityChanged} >
+                                                <select className="form-control" onChange={handleActivityChanged}>
                                                     {
-                                                        masterData.activityGroups.map((data, index)=> (
+                                                        masterData.activityGroups.map((data, index) => (
                                                             <option key={data.id}
                                                                     value={data.id}>{data.title}</option>
                                                         ))
@@ -159,13 +172,14 @@ const GalleryPage = ({formHeader, formType}) => {
                                             </div>
                                         </div>
                                         <div className="col-lg-1">
-                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}> گروه تصاویر</label>
+                                            <label className="mt-3" style={{float: 'left', textAlign: 'center'}}> گروه
+                                                تصاویر</label>
                                         </div>
                                         <div className="col-lg-2">
                                             <div className="form-group m-t-10">
                                                 <select className="form-control" onChange={handleSuperCategoryChanged}>
                                                     {
-                                                        superCategory.map((data, index)=> (
+                                                        superCategory.map((data, index) => (
                                                             <option key={data.id}
                                                                     value={data.id}>{data.title}</option>
                                                         ))
@@ -175,13 +189,15 @@ const GalleryPage = ({formHeader, formType}) => {
 
                                         </div>
                                         <div className="col-lg-1">
-                                            <label className="mt-3" style={{float:'left', textAlign:'center'}}> زیر گروه </label>
+                                            <label className="mt-3" style={{float: 'left', textAlign: 'center'}}> زیر
+                                                گروه </label>
                                         </div>
                                         <div className="col-lg-2">
                                             <div className="form-group m-t-10">
-                                                <select ref={categorySelected} className="form-control"  onChange={handleCategoryChange}>
+                                                <select ref={categorySelected} className="form-control"
+                                                        onChange={handleCategoryChange}>
                                                     {
-                                                        category.map((data, index)=> (
+                                                        category.map((data, index) => (
                                                             <option key={index}
                                                                     value={data.id}>{data.title}</option>
                                                         ))
@@ -193,9 +209,10 @@ const GalleryPage = ({formHeader, formType}) => {
                                         <div className="col-lg-1">
                                             {
                                                 searchButtonRender && (
-                                                    <button type="button" className="btn btn-success waves-effect waves-light"
+                                                    <button type="button"
+                                                            className="btn btn-success waves-effect waves-light"
                                                             data-toggle="modal"
-                                                            onClick={  loadImagesFromDb}
+                                                            onClick={loadImagesFromDb}
                                                             data-target=".bs-example-modal-center"> جستجوی عکس ها
                                                     </button>
                                                 )
@@ -205,7 +222,8 @@ const GalleryPage = ({formHeader, formType}) => {
                                         <div className="col-lg-1">
                                             {
                                                 searchButtonRender && (
-                                                    <button type="button" className="btn btn-danger waves-effect waves-light"
+                                                    <button type="button"
+                                                            className="btn btn-danger waves-effect waves-light"
                                                             data-toggle="modal"
 
                                                             data-target=".bs-example-modal-center">انصراف
@@ -224,7 +242,7 @@ const GalleryPage = ({formHeader, formType}) => {
                             </div>
                             <hr/>
                             <div className="row">
-                                <div className="col-lg-12" style={{display:images.length > 0 ? '' : 'none'}}  >
+                                <div className="col-lg-12" style={{display: images.length > 0 ? '' : 'none'}}>
                                     {
 
                                         images.map((url, index) => (
