@@ -12,6 +12,11 @@ const GalleryApi = {
         });
     },
 
+    checkExistenceImage : async (fileName) => {
+        const existence = await axios.get(`${API_BASE_URL}/common/ce/${fileName}`);
+        return existence.data.exist;
+    },
+
     assignItemIdAndSend: (galleryItem, processResultCallback) => {
         axios.post(`${API_BASE_URL}/gallery/`, galleryItem)
             .then(res => {
@@ -30,8 +35,15 @@ const GalleryApi = {
 
     },
 
+    removeImageFromGallery : (refId) => {
+        return axios.delete(`${API_BASE_URL}/gallery/${refId}`)
+            .then(res => {
+                console.log(res)
+            });
+    },
 
     loadImages:  (filter, imageLoadedFromApi) => {
+
          axios.get(`${API_BASE_URL}/gallery/sec/${filter}`)
             .then(res => {
                 imageLoadedFromApi(res.data);

@@ -6,12 +6,12 @@ import masterData from "../../api/masterData";
 import GalleryApi from "../../api/gallery";
 import SuccessAlertComponent from "../../components/alert/successAlert";
 import ModalComponent from "../../components/modal/modal";
+import FailureAlertComponent from "../../components/alert/failureAlert";
 
 const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
 
 
-
-const ImageContainer = ({image, selectImage}) => {
+const ImageContainer = ({image, selectImage, width, height}) => {
     const selectPicture = (e) => {
         e.preventDefault();
         selectImage(e);
@@ -20,9 +20,9 @@ const ImageContainer = ({image, selectImage}) => {
         <React.Fragment>
 
             <a className="ml-3 img-thumbnail" onClick={selectPicture} style={{display: 'inline-block'}}
-               data-target="remove-elem">
+               data-target=".bs-example-modal-center" data-toggle="modal">
                 <img className="img-fluid d-block image-container" src={IMAGE_API_URL + '/' + image}
-                     alt="" width="200" height="200"/>
+                     alt="" width={width} height={height} data-tag={image}/>
             </a>
 
         </React.Fragment>
@@ -37,8 +37,8 @@ const GalleryPage = ({formHeader, formType}) => {
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
     const [searchButtonRender, setSearchButtonRender] = useState(true);
-    const [currentCategory, setCurrentCategory] = useState(1);
-    const [currentPictureSelected, setCurrentPictureSelected] = useState('');
+    const [showExistImageAlert, setShowExistImageAlert] = useState('none');
+    const [currentPictureSelected, setCurrentPictureSelected] = useState(0);
     const categorySelected = useRef();
 
     const selectPicture = (e) => {
@@ -80,12 +80,22 @@ const GalleryPage = ({formHeader, formType}) => {
             blobName: postImageResult.data.imageName,
         }
         GalleryApi.assignItemIdAndSend(galleryItem, (res) => {
-
+            $('.searchButton').click();
         })
+
     }
 
     const handleSelectedFile = (e) => {
-        GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
+        GalleryApi.checkExistenceImage(e.target.files[0].name).then(res => {
+            if(!res){
+                setShowExistImageAlert('none');
+                GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
+            }else{
+                setShowExistImageAlert('');
+            }
+
+        });
+        //
     }
 
     const loadImagesFromDb = () => {
@@ -134,8 +144,13 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const handleSelectImage = (e) => {
+        setCurrentPictureSelected(Number(e.target.attributes['data-tag'].value));
+    }
 
-        console.log(e.target.attributes['src'].value);
+    const removeImageAndReload = () => {
+        GalleryApi.removeImageFromGallery(Number(currentPictureSelected)).then()
+        $('.searchButton').click();
+        $('.close').click();
     }
 
     const handleCategoryChange = (e) => {
@@ -155,12 +170,14 @@ const GalleryPage = ({formHeader, formType}) => {
                                     <SuccessAlertComponent show={successAddImage}
                                                            message="تصویر موردنظر در پایگاه داده ذخیره شد"
                                     />
+                                    <FailureAlertComponent isShow={showExistImageAlert}
+                                                           message="فاسلی با همین نام در گالری تصاویر وجود دارد"/>
                                     <div className="row">
                                         <div className="col-lg-1">
-                                            <button type="button" className="btn btn-success waves-effect waves-light"
+                                            <button type="button" className="btn btn-success waves-effect waves-light "
                                                     data-toggle="modal"
                                                     onClick={selectPicture}
-                                                    data-target=".bs-example-modal-center">تصویر جدید
+                                                    data-target=".hatash-hakhmar-hapoo-payshiorno">تصویر جدید
                                             </button>
                                         </div>
                                         <div className="col-lg-1">
@@ -218,7 +235,7 @@ const GalleryPage = ({formHeader, formType}) => {
                                             {
                                                 searchButtonRender && (
                                                     <button type="button"
-                                                            className="btn btn-success waves-effect waves-light"
+                                                            className="btn btn-success waves-effect waves-light searchButton"
                                                             data-toggle="modal"
                                                             onClick={loadImagesFromDb}> جستجوی عکس ها
                                                     </button>
@@ -227,16 +244,7 @@ const GalleryPage = ({formHeader, formType}) => {
 
                                         </div>
                                         <div className="col-lg-1">
-                                            {
-                                                searchButtonRender && (
-                                                    <button type="button"
-                                                            className="btn btn-danger waves-effect waves-light"
-                                                            data-toggle="modal"
 
-                                                            data-target=".bs-example-modal-center">انصراف
-                                                    </button>
-                                                )
-                                            }
 
                                         </div>
                                     </div>
@@ -254,7 +262,12 @@ const GalleryPage = ({formHeader, formType}) => {
 
                                         images.map((url, index) => (
 
-                                            <ImageContainer key={index} image={url}/>
+                                            <ImageContainer key={index}
+                                                            image={url}
+                                                            selectImage={handleSelectImage}
+                                                            width={"500"}
+                                                            height={"500"}
+                                            />
                                         ))
                                     }
                                 </div>
@@ -262,8 +275,19 @@ const GalleryPage = ({formHeader, formType}) => {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <ModalComponent modalId="bs-example-modal-center"
-                                                    modalTitle={"معرفی کالا"}>
-                                        <ImageContainer image={currentPictureSelected} selectImage={handleSelectImage} />
+                                                    modalTitle={"معرفی کالا"}
+                                                    elementStyle={{textAlign: 'center'}}
+                                    >
+                                        <ImageContainer image={currentPictureSelected}/>
+                                        <div className="modal-footer">
+                                            <div>
+                                                <button data-dismiss="modal"
+                                                        onClick={removeImageAndReload}
+                                                        className="btn btn-danger waves-effect ml-2">
+                                                    حذف عکس ازآلبوم
+                                                </button>
+                                            </div>
+                                        </div>
                                     </ModalComponent>
                                 </div>
                             </div>

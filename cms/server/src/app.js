@@ -6,6 +6,7 @@ const vendorRouter = require('./routes/vendor.route')
 const productRouter = require('./routes/product.route');
 const productSpecRouter = require('./routes/productSpec.route');
 const galleryRouter = require('./routes/gallery.route');
+const nocache = require('nocache');
 
 const databaseConnection = require('./services/mongo.service');
 const cors = require('cors');
@@ -17,7 +18,10 @@ databaseConnection.dbConnect().then(() => {
 });
 cms_app.use(cors({
     origin:'*'
-}))
+}));
+
+cms_app.use(nocache());
+
 cms_app.use(express.json());
 // --------------------------------------- Use Morgan Package for log all http event
 cms_app.use(morgan('combined'));

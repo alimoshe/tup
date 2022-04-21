@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         if (file) {
-            const name = Date.now() + file.originalname;
+            const name = file.originalname;
             imgName = name;
             cb(null, name);
         }
@@ -59,32 +59,49 @@ commonRouter.post('/picRemove', async (req, res) => {
     }
 })
 
+commonRouter.get('/ce/:fileName', async (req, res)=>{
+    const fileName=req.params.fileName;
+    fs.exists(path.join(__dirname, '..', '..', 'public', 'images', fileName),(exists => {
+        if(exists) {
+            return res.status(200).send({exist: true});
+        }else{
+            return res.status(200).send({exist:false});
+        }
+    }));
 
-commonRouter.post('/getImg', (req, res)=>{
+})
+
+commonRouter.post('/getImg', (req, res) => {
     const imageName = req.body.imageName;
     const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', imageName);
-    return res.status(200).send({ok: true, path : absolutePath});
+    return res.status(200).send({ok: true, path: absolutePath});
 })
 
-commonRouter.get('/getImg/:id', async (req, res)=>{
+commonRouter.get('/getImg/:id',async (req, res) => {
     const itemId = Number(req.params.id);
-    const result = await galleryModel.getBlobName(itemId);
-    const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', result.blobName);
-    return res.status(200).sendFile(absolutePath);
-    //return res.status(200).send({ok:true});
+    if (itemId !== 0) {
+        const result = await galleryModel.getBlobName(itemId);
+        if (result) {
+            const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', result.blobName);
+            return res.status(200).sendFile(absolutePath);
+        }else
+            return res.status(200).send({ok: false});
+    } else {
+        return res.status(200).send({ok: false});
+    }
 })
 
-commonRouter.post('/updateImg/:imageName/:galleryItem', async (req, res)=>{
+commonRouter.post('/updateImg/:imageName/:galleryItem', async (req, res) => {
 
     const imageName = req.params.imageName;
     const galleryItem = Number(req.params.galleryItem);
     const absolutePath = path.join(__dirname, '..', '..', 'public', 'images', imageName);
     const fileContent = fs.readFileSync(absolutePath);
-    await galleryModel.updateGallery(galleryItem,fileContent);
-    return res.status(200).send({ok: true, path : absolutePath});
+    await galleryModel.updateGallery(galleryItem, fileContent);
+    return res.status(200).send({ok: true, path: absolutePath});
 })
 
-commonRouter.get('/getImg/:id/:row', async (req, res)=>{
+commonRouter.get('/getImg/:id/:row', async (req, res) => {
     const prodId = req.params.id;
     const picRow = req.params.row;
     const product = await productModel.getAllProductPics(prodId);
@@ -92,7 +109,7 @@ commonRouter.get('/getImg/:id/:row', async (req, res)=>{
     return res.status(200).sendFile(path.join(__dirname, '..', '..', 'public', 'images', product.pictures[picRow]));
 })
 
-commonRouter.get('/get/:imageName', async (req, res)=>{
+commonRouter.get('/get/:imageName', async (req, res) => {
     return res.status(200).sendFile(path.join(__dirname, '..', '..', 'public', 'images', req.params.imageName));
 })
 

@@ -64,6 +64,10 @@ async function updateGallery(itemId, picture) {
     }, {blobData: picture});
 }
 
+async function getGalleryItemsByBlobName(blobName){
+    return galleryModel.find({blobName : blobName});
+}
+
 async function getBlobName(refId) {
     return galleryModel.findOne({
         visible: true,
@@ -71,14 +75,19 @@ async function getBlobName(refId) {
     }, {blobName : 1});
 }
 
+async function removeGalleryItem(refId) {
+    return galleryModel.remove({itemId : refId});
 
+}
 module.exports = {
     getAllGalleryData,
     galleryItemCreate,
     getGalleryCountItems,
     getGalleryItemsBySectionId,
     getGalleryItemBlobData,
+    getGalleryItemsByBlobName,
     getBlobName,
     updateGallery,
+    removeGalleryItem,
 }
 

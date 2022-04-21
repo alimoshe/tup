@@ -18,12 +18,16 @@ galleryRouter.post('/', async (req, res) => {
 
 galleryRouter.get('/getImg/:id', async (req, res)=>{
     const imageID = Number(req.params.id);
-    console.log(imageID);
     return res.status(200).send(await galleryModel.getGalleryItemBlobData(imageID));
 })
 
 galleryRouter.get('/sec/:sectionId', async (req, res)=>{
-    console.log(req.params.sectionId);
     return res.status(200).send(await galleryModel.getGalleryItemsBySectionId(req.params.sectionId));
+});
+
+galleryRouter.delete('/:id', async (req, res)=>{
+    const galleryItemId = Number(req.params.id);
+    await galleryModel.removeGalleryItem(galleryItemId);
+    return res.status(200).send({ok:true});
 });
 module.exports = galleryRouter;
