@@ -35,6 +35,7 @@ const productApi = {
         return 'test';
 
     },
+
     loadImagesPath: async (img) => {
         let picturePath = '';
         await axios.post(`${API_BASE_URL}/common/getImg`, {imageName: img})

@@ -39,7 +39,8 @@ const GalleryPage = ({formHeader, formType}) => {
     const [activityGroups, setActivityGroups] = useState([]);
     const [successAddImage, setSuccessAddImage] = useState('none');
     const [searchButtonRender, setSearchButtonRender] = useState(true);
-    const [showExistImageAlert, setShowExistImageAlert] = useState('none');
+    const [showFailureMessage, setShowFailureMessage] = useState('none');
+    const [failureMessage, setFailureMessage] = useState('');
     const [currentPictureSelected, setCurrentPictureSelected] = useState(0);
     const [showProductExistAlert, setShowProductExistAlert] = useState('none');
     const [foundProductInfo, setFoundProductInfo] = useState('');
@@ -94,10 +95,12 @@ const GalleryPage = ({formHeader, formType}) => {
     const handleSelectedFile = (e) => {
         GalleryApi.checkExistenceImage(e.target.files[0].name).then(res => {
             if (!res) {
-                setShowExistImageAlert('none');
+                setShowFailureMessage('none');
+
                 GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
             } else {
-                setShowExistImageAlert('');
+                setShowFailureMessage('');
+                setFailureMessage('فایلی با همین نام در گالری تصاویر وجود دارد');
             }
 
         });
@@ -156,9 +159,17 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const removeImageAndReload = () => {
-        GalleryApi.removeImageFromGallery(Number(currentPictureSelected)).then()
-        $('.searchButton').click();
-        $('.close').click();
+        GalleryApi.removeImageFromGallery(Number(currentPictureSelected)).then((result) => {
+            if(result.data.error){
+                console.log(result);
+                setFailureMessage('به دلیل استفاده ار این عکس امکان حذف وجود ندارد');
+                setShowFailureMessage('');
+            }else{
+                $('.searchButton').click();
+                $('.close').click();
+            }
+        })
+
     }
 
     const handleCategoryChange = (e) => {
@@ -204,8 +215,8 @@ const GalleryPage = ({formHeader, formType}) => {
                                     <SuccessAlertComponent show={successAddImage}
                                                            message="تصویر موردنظر در پایگاه داده ذخیره شد"
                                     />
-                                    <FailureAlertComponent isShow={showExistImageAlert}
-                                                           message="فایلی با همین نام در گالری تصاویر وجود دارد"/>
+                                    <FailureAlertComponent isShow={showFailureMessage}
+                                                           message={failureMessage}/>
                                     <div className="row">
                                         <div className="col-lg-1">
                                             <button type="button" className="btn btn-success waves-effect waves-light "

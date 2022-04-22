@@ -27,7 +27,7 @@ galleryRouter.get('/sec/:sectionId', async (req, res)=>{
 
 galleryRouter.delete('/:id', async (req, res)=>{
     const galleryItemId = Number(req.params.id);
-    await galleryModel.removeGalleryItem(galleryItemId);
-    return res.status(200).send({ok:true});
+    const removedElement = await galleryModel.removeGalleryItem(galleryItemId);
+    return res.status(200).send(removedElement);
 });
 module.exports = galleryRouter;

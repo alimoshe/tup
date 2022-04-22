@@ -35,6 +35,9 @@ const GalleryApi = {
                     fail(result);
             })
     },
+    removeGalleryItem : () =>{
+
+    },
 
     getGalleryLen: async () => {
         let length;
@@ -47,10 +50,7 @@ const GalleryApi = {
     },
 
     removeImageFromGallery : (refId) => {
-        return axios.delete(`${API_BASE_URL}/gallery/${refId}`)
-            .then(res => {
-                console.log(res)
-            });
+        return axios.delete(`${API_BASE_URL}/gallery/${refId}`);
     },
 
     loadImages:  (filter, imageLoadedFromApi) => {
