@@ -61,6 +61,7 @@ const productApi = {
             })
             .then(data => {
                     loaded = data;
+
                     const result = loaded.filter(item => {
                         return Number(item.productId) === Number(prodId);
                     });
@@ -71,8 +72,6 @@ const productApi = {
                     }
                 }
             )
-
-
     }
 
 }

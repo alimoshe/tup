@@ -7,6 +7,8 @@ import GalleryApi from "../../api/gallery";
 import SuccessAlertComponent from "../../components/alert/successAlert";
 import ModalComponent from "../../components/modal/modal";
 import FailureAlertComponent from "../../components/alert/failureAlert";
+import productApi from "../../api/product";
+import {Result} from "antd";
 
 const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
 
@@ -39,7 +41,11 @@ const GalleryPage = ({formHeader, formType}) => {
     const [searchButtonRender, setSearchButtonRender] = useState(true);
     const [showExistImageAlert, setShowExistImageAlert] = useState('none');
     const [currentPictureSelected, setCurrentPictureSelected] = useState(0);
+    const [showProductExistAlert, setShowProductExistAlert] = useState('none');
+    const [foundProductInfo, setFoundProductInfo] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
     const categorySelected = useRef();
+    const searchBoxRef = useRef();
 
     const selectPicture = (e) => {
         e.preventDefault();
@@ -87,10 +93,10 @@ const GalleryPage = ({formHeader, formType}) => {
 
     const handleSelectedFile = (e) => {
         GalleryApi.checkExistenceImage(e.target.files[0].name).then(res => {
-            if(!res){
+            if (!res) {
                 setShowExistImageAlert('none');
                 GalleryApi.sendImagesToApi(e.target.files[0], (imageName) => addImageToGallery(imageName));
-            }else{
+            } else {
                 setShowExistImageAlert('');
             }
 
@@ -144,6 +150,8 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const handleSelectImage = (e) => {
+        setShowProductExistAlert('none');
+        setFoundProductInfo('');
         setCurrentPictureSelected(Number(e.target.attributes['data-tag'].value));
     }
 
@@ -154,9 +162,35 @@ const GalleryPage = ({formHeader, formType}) => {
     }
 
     const handleCategoryChange = (e) => {
-        console.log(e.target.value);
+
     }
 
+    const productSearch = () => {
+        setFoundProductInfo('');
+        setShowProductExistAlert('none');
+
+        const productId = searchBoxRef.current.value;
+        productApi.filterProduct(productId, (searchResult) => {
+            setFoundProductInfo(searchResult[0].title);
+            const productGalleryItem = {
+                itemId: -1,
+                galleryItemId: currentPictureSelected,
+                productItemId: searchResult[0].productId,
+            }
+            GalleryApi.createProductGalleryItem(productGalleryItem, (result) => {
+                $('.close').click();
+            }, (result) => {
+                if(result.data.error === 1) {
+                    setAlertMessage('این تصویر قبلا به همین کالا تخصیص داده شده است');
+                    setShowProductExistAlert('');
+                }
+            });
+        }, () => {
+
+            setAlertMessage('کالایی با کد وارد شده یافت نشد');
+            setShowProductExistAlert('');
+        })
+    }
     return (
         <React.Fragment>
             <FormToolbarComponent formHeader={formHeader}/>
@@ -171,7 +205,7 @@ const GalleryPage = ({formHeader, formType}) => {
                                                            message="تصویر موردنظر در پایگاه داده ذخیره شد"
                                     />
                                     <FailureAlertComponent isShow={showExistImageAlert}
-                                                           message="فاسلی با همین نام در گالری تصاویر وجود دارد"/>
+                                                           message="فایلی با همین نام در گالری تصاویر وجود دارد"/>
                                     <div className="row">
                                         <div className="col-lg-1">
                                             <button type="button" className="btn btn-success waves-effect waves-light "
@@ -273,14 +307,43 @@ const GalleryPage = ({formHeader, formType}) => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-lg-6">
+                                <div className="col-lg-12">
                                     <ModalComponent modalId="bs-example-modal-center"
                                                     modalTitle={"معرفی کالا"}
                                                     elementStyle={{textAlign: 'center'}}
                                     >
                                         <ImageContainer image={currentPictureSelected}/>
+                                        <FailureAlertComponent isShow={showProductExistAlert}
+                                                               message={alertMessage}/>
                                         <div className="modal-footer">
                                             <div>
+                                                <input type="text"
+                                                       className="form-control"
+                                                       placeholder="کد کالا را جهت جستجو وارد نماپید"
+                                                       ref={searchBoxRef}
+                                                />
+                                                <hr/>
+                                                {
+                                                    foundProductInfo && (
+                                                        <div>
+                                                            <span>نام کالا : {foundProductInfo}</span>
+                                                            <hr/>
+                                                        </div>
+
+                                                    )
+                                                }
+                                                <button
+                                                    className="btn btn-info waves-effect ml-2"
+                                                    onClick={productSearch}
+                                                >
+                                                    اختصاص به محصول
+                                                </button>
+                                                <button
+                                                    className="btn btn-info waves-effect ml-2"
+                                                    onClick={productSearch}
+                                                >
+                                                    اختصاص به خدمات
+                                                </button>
                                                 <button data-dismiss="modal"
                                                         onClick={removeImageAndReload}
                                                         className="btn btn-danger waves-effect ml-2">

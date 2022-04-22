@@ -10,7 +10,7 @@ class ModalComponent extends Component{
     render() {
         return (
 
-                <div className="col-sm-6 col-md-3 m-t-30" style={this.props.elementStyle}>
+                <div className="col-lg-6 m-t-30" style={this.props.elementStyle}>
 
                         <div className={this.getModalClassName()} tabIndex="-1" role="dialog"
                              aria-labelledby="mySmallModalLabel" aria-hidden="true">

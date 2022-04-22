@@ -6,6 +6,8 @@ const vendorRouter = require('./routes/vendor.route')
 const productRouter = require('./routes/product.route');
 const productSpecRouter = require('./routes/productSpec.route');
 const galleryRouter = require('./routes/gallery.route');
+const productGalleryRouter = require('./routes/productGallery.route');
+
 const nocache = require('nocache');
 
 const databaseConnection = require('./services/mongo.service');
@@ -32,6 +34,7 @@ cms_app.use('/category', categoryRouter );
 cms_app.use('/vendor', vendorRouter);
 cms_app.use('/spec', productSpecRouter);
 cms_app.use('/gallery', galleryRouter);
+cms_app.use('/product-gallery', productGalleryRouter);
 
 cms_app.get('/',(req, res)=>{
     res.status(200).send({

@@ -25,6 +25,17 @@ const GalleryApi = {
             });
     },
 
+    createProductGalleryItem : (galleryProductItem, success, fail) => {
+        axios.post(`${API_BASE_URL}/product-gallery/`,galleryProductItem)
+            .then((result) =>{
+                console.log(result);
+                if(!result.data.error)
+                    success(result);
+                else
+                    fail(result);
+            })
+    },
+
     getGalleryLen: async () => {
         let length;
         return axios.get(`${API_BASE_URL}/gallery/`)
