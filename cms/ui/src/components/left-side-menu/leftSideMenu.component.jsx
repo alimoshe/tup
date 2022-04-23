@@ -48,6 +48,12 @@ class LeftSideMenuComponent extends Component{
                                     <span>گالری تصاویر</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="/services" className="waves-effect">
+                                    <i className="dripicons-home" />
+                                    <span>معرفی خدمات</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div className="clearfix">

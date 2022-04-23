@@ -8,7 +8,6 @@ import SuccessAlertComponent from "../../components/alert/successAlert";
 import ModalComponent from "../../components/modal/modal";
 import FailureAlertComponent from "../../components/alert/failureAlert";
 import productApi from "../../api/product";
-import {Result} from "antd";
 
 const IMAGE_API_URL = 'http://localhost:3080/common/getImg';
 
@@ -101,6 +100,9 @@ const GalleryPage = ({formHeader, formType}) => {
             } else {
                 setShowFailureMessage('');
                 setFailureMessage('فایلی با همین نام در گالری تصاویر وجود دارد');
+                setTimeout(()=>{
+                    setShowFailureMessage('none');
+                },5000);
             }
 
         });
@@ -160,11 +162,17 @@ const GalleryPage = ({formHeader, formType}) => {
 
     const removeImageAndReload = () => {
         GalleryApi.removeImageFromGallery(Number(currentPictureSelected)).then((result) => {
-            if(result.data.error){
+            if (result.data.error) {
                 console.log(result);
+
                 setFailureMessage('به دلیل استفاده ار این عکس امکان حذف وجود ندارد');
                 setShowFailureMessage('');
-            }else{
+                $('.close').click();
+                setTimeout(()=>{
+                    setShowFailureMessage('none');
+                },5000);
+
+            } else {
                 $('.searchButton').click();
                 $('.close').click();
             }
@@ -191,7 +199,7 @@ const GalleryPage = ({formHeader, formType}) => {
             GalleryApi.createProductGalleryItem(productGalleryItem, (result) => {
                 $('.close').click();
             }, (result) => {
-                if(result.data.error === 1) {
+                if (result.data.error === 1) {
                     setAlertMessage('این تصویر قبلا به همین کالا تخصیص داده شده است');
                     setShowProductExistAlert('');
                 }
@@ -343,17 +351,17 @@ const GalleryPage = ({formHeader, formType}) => {
 
                                                     )
                                                 }
+
                                                 <button
                                                     className="btn btn-info waves-effect ml-2"
-                                                    onClick={productSearch}
                                                 >
-                                                    اختصاص به محصول
+                                                    اختصاص به خدمات
                                                 </button>
                                                 <button
                                                     className="btn btn-info waves-effect ml-2"
                                                     onClick={productSearch}
                                                 >
-                                                    اختصاص به خدمات
+                                                    اختصاص به محصول
                                                 </button>
                                                 <button data-dismiss="modal"
                                                         onClick={removeImageAndReload}
